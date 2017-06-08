@@ -18,11 +18,6 @@ ActiveRecord::Schema.define(version: 20170604094357) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "chats_users", id: false, force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "chat_id", null: false
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -31,6 +26,13 @@ ActiveRecord::Schema.define(version: 20170604094357) do
     t.string "password_digest"
     t.string "token"
     t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  create_table "users_chats", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "chat_id"
+    t.index ["chat_id"], name: "index_users_chats_on_chat_id"
+    t.index ["user_id"], name: "index_users_chats_on_user_id"
   end
 
 end

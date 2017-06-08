@@ -10,7 +10,7 @@ class ApplicationController < ActionController::API
 
     private 
 
-    def is_valid_headers(auth_headers, user_id)
+    def is_valid_headers(auth_headers)
         if auth_headers.nil?
             return false
         end

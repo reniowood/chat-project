@@ -5,7 +5,6 @@ class AuthenticationController < ApplicationController
 
     def get_token
         authenticate_with_http_basic do |email, password|
-            p email
             user = User.find_by_email(email)
             if user && user.authenticate(password)
                 render json: { token: user.token } and return
