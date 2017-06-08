@@ -2,7 +2,6 @@ class UsersController < ApplicationController
     skip_before_action :authenticate_user, only: [:create]
 
     def create
-        p params
         user = User.create(name: params[:name], email: params[:email], password: params[:password])
         if user && user.valid?
             head :ok
