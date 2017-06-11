@@ -16,5 +16,7 @@ module ChatProject
     # -- all .rb files in that directory are automatically loaded.
     config.api_only = true
     config.debug_exception_response_format = :api
+
+    config.mq = config_for(:mq)
   end
 end

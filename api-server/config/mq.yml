@@ -1,0 +1,11 @@
+default: &default
+  host: localhost
+  queue:
+    prefix: send_msg
+    num: 2
+
+development:
+  <<: *default
+
+test:
+  <<: *default
