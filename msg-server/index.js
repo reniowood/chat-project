@@ -9,7 +9,14 @@ function getQueues(queuePrefix, numQueue) {
     return queues;
 }
 
+function putMsgToRedis(msg) {
+    const chatMsg = JSON.parse(msg);
+    redisClient.lpush(`c:${chatMsg.id}`, msg);
+}
+
 const amqp = require('amqplib/callback_api');
+const redis = require('redis');
+const redisClient = redis.createClient();
 
 amqp.connect(config.rabbitmq.host, (err, connection) => {
     connection.createChannel((err, channel) => {
@@ -20,6 +27,7 @@ amqp.connect(config.rabbitmq.host, (err, connection) => {
             console.log(`Waiting for messages in ${queue}. To exit press CTRL+C`);
             channel.consume(queue, (message) => {
                 console.log(`${queue} received ${message.content.toString()}`);
+                putMsgToRedis(message.content);
                 channel.ack(message);
             });
         });
