@@ -6,6 +6,7 @@ class Chat < ApplicationRecord
 
     def send_message(sender_id, message)
         send_message_to_mq(sender_id, {
+            id: self.id,
             from: sender_id,
             msg: message
         })
