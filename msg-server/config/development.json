@@ -1,0 +1,7 @@
+{
+    "rabbitmq": {
+        "host": "amqp://localhost",
+        "queuePrefix": "send_msg",
+        "numQueue": 2
+    }
+}
