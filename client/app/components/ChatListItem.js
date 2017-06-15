@@ -2,18 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 
 export default class ChatListItem extends React.Component {
-    onPressChatListItem() {
-        const { navigate } = this.props.navigation;
-
-        navigate('ChatRoom');
-    }
-
     render() {
         const item = this.props.item;
 
         return (
             <View>
-                <TouchableHighlight onPress={this.onPressChatListItem.bind(this)}>
+                <TouchableHighlight onPress={this.props.onPressChatListItem}>
                     <View style={styles.item}>
                         <Text style={styles.subject}>{item.name}</Text>
                         <Text>{item.lastMsg}</Text>

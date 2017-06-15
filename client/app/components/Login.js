@@ -2,14 +2,22 @@ import React from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
 
 export default class Login extends React.Component {
-    static navigationOptions ={
+    static navigationOptions = {
         title: 'Login',
     };
+
+    logIn() {
+        const userId = 1;
+
+        return userId;
+    }
 
     onPressLoginButton() {
         const { navigate } = this.props.navigation;
 
-        navigate('ChatList');
+        const userId = this.logIn();
+
+        navigate('ChatList', { userId });
     }
 
     render() {

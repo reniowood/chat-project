@@ -7,6 +7,13 @@ export default class ChatList extends React.Component {
         title: 'Chats',
     };
 
+    onPressChatListItem() {
+        const { navigate } = this.props.navigation;
+        const { params } = this.props.navigation.state;
+
+        navigate('ChatRoom', { userId: params.userId });
+    }
+
     render() {
         return (
             <View style={{ flex: 1 }}>
@@ -21,7 +28,7 @@ export default class ChatList extends React.Component {
                         {key: 7, name: 'chat 7', lastMsg: 'aa테스트트세트a'},
                         {key: 8, name: 'chat 8', lastMsg: 'wefwefgr'},
                     ]}
-                    renderItem={({item}) => <ChatListItem item={item} />}
+                    renderItem={({item}) => <ChatListItem item={item} onPressChatListItem={this.onPressChatListItem.bind(this)} />}
                 />
             </View>
         );
