@@ -3,6 +3,10 @@ import { View, ScrollView, TextInput, Button, StyleSheet } from 'react-native';
 import ChatBubble from './ChatBubble';
 
 export default class ChatRoom extends React.Component {
+    static navigationOptions = ({ navigation, screenProps }) => ({
+        title: navigation.state.params.name,
+    });
+    
     componentDidMount() {
         setTimeout(() => this._scrollView.scrollToEnd(), 0);
     }
@@ -30,6 +34,7 @@ export default class ChatRoom extends React.Component {
                             {key: 12, date: new Date('2017-06-01T13:10:24+09:00'), senderId: 1, msg: '그냥'},
                         ].map((msgData) => (
                             <ChatBubble
+                                style={styles.chatBubble}
                                 key={msgData.key}
                                 sentByMe={params.userId === msgData.senderId}
                                 date={msgData.date}
@@ -43,6 +48,7 @@ export default class ChatRoom extends React.Component {
                     <TextInput style={styles.textInput} />
                     <View style={styles.sendButton}>
                         <Button
+                            color='#1d656d'
                             onPress={() => {}}
                             title="전송"
                         />
@@ -61,9 +67,15 @@ const styles = StyleSheet.create({
     chatBubbleView: {
         flex: 1,
     },
+    chatBubble: {
+        margin: 10,
+    },
     inputView: {
         flexDirection: 'row',
+        marginTop: 10,
+        paddingHorizontal: 5,
         height: 48,
+        backgroundColor: 'white',
     },
     textInput: {
         flex: 1,
