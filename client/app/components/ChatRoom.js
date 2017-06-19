@@ -1,15 +1,12 @@
 import React from 'react';
-import { View, ScrollView, TextInput, Button, StyleSheet } from 'react-native';
+import { View, FlatList, TextInput, Button, StyleSheet } from 'react-native';
+import ReversedFlatList from 'react-native-reversed-flat-list';
 import ChatBubble from './ChatBubble';
 
 export default class ChatRoom extends React.Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
         title: navigation.state.params.name,
     });
-    
-    componentDidMount() {
-        setTimeout(() => this._scrollView.scrollToEnd(), 0);
-    }
 
     render() {
         const { params } = this.props.navigation.state;
@@ -17,8 +14,8 @@ export default class ChatRoom extends React.Component {
         return (
             <View style={styles.container}>
                 <View style={styles.chatBubbleView}>
-                    <ScrollView ref={(view) => this._scrollView = view}>
-                        {[
+                    <ReversedFlatList ref={(view) => this._scrollView = view}
+                        data={[
                             {key: 0, date: new Date('2017-06-01T10:00:00+09:00'), senderId: 1, msg: '안녕 뭐하구지내'},
                             {key: 1, date: new Date('2017-06-01T10:05:00+09:00'), senderId: 2, msg: '오랜만이다 그냥 회사다니지뭐'},
                             {key: 2, date: new Date('2017-06-01T10:10:11+09:00'), senderId: 1, msg: '회사는 다닐만 해?'},
@@ -32,17 +29,18 @@ export default class ChatRoom extends React.Component {
                             {key: 10, date: new Date('2017-06-01T13:00:00+09:00'), senderId: 1, msg: 'ㅋㅋㅋㅋ'},
                             {key: 11, date: new Date('2017-06-01T13:05:18+09:00'), senderId: 2, msg: '왜 안갈라고?'},
                             {key: 12, date: new Date('2017-06-01T13:10:24+09:00'), senderId: 1, msg: '그냥'},
-                        ].map((msgData) => (
+                        ]}
+                        renderItem={({item}) => (
                             <ChatBubble
                                 style={styles.chatBubble}
-                                key={msgData.key}
-                                sentByMe={params.userId === msgData.senderId}
-                                date={msgData.date}
+                                key={item.key}
+                                sentByMe={params.userId === item.senderId}
+                                date={item.date}
                             >
-                                {msgData.msg}
-                            </ChatBubble>
-                        ))}
-                    </ScrollView>
+                                {item.msg}
+                            </ChatBubble>)
+                        }
+                    />
                 </View>
                 <View style={styles.inputView}>
                     <TextInput style={styles.textInput} />
@@ -62,7 +60,6 @@ export default class ChatRoom extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-between',
     },
     chatBubbleView: {
         flex: 1,

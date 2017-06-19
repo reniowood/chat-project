@@ -11,8 +11,6 @@ export default class ChatList extends React.Component {
         const { navigate } = this.props.navigation;
         const { params } = this.props.navigation.state;
 
-        console.log(this.props);
-
         navigate('ChatRoom', { userId: params.userId, name: item.name });
     }
 
