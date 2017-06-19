@@ -2,6 +2,7 @@ import React from 'react';
 import { View, FlatList, TextInput, Button, StyleSheet } from 'react-native';
 import ReversedFlatList from 'react-native-reversed-flat-list';
 import ChatBubble from './ChatBubble';
+import Color from '../styles/Color';
 
 export default class ChatRoom extends React.Component {
     static navigationOptions = ({ navigation, screenProps }) => ({
@@ -46,7 +47,7 @@ export default class ChatRoom extends React.Component {
                     <TextInput style={styles.textInput} />
                     <View style={styles.sendButton}>
                         <Button
-                            color='#1d656d'
+                            color={Color.peacockBlue}
                             onPress={() => {}}
                             title="전송"
                         />

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Color from '../styles/Color';
 
 export default class ChatBubble extends React.Component {
     convertDateFormat(date) {
@@ -40,15 +41,15 @@ const styles = StyleSheet.create({
         minHeight: 50,
     },
     myBubble: {
-        backgroundColor: '#1d656d',
+        backgroundColor: Color.peacockBlue,
         borderWidth: 1,
-        borderColor: '#1d656d',
+        borderColor: Color.peacockBlue,
         borderRadius: 10,
     },
     friendBubble: {
         backgroundColor: 'white',
         borderWidth: 1,
-        borderColor: '#1d656d',
+        borderColor: Color.peacockBlue,
         borderRadius: 10,
     },
     myMsg: {
@@ -57,7 +58,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     friendMsg: {
-        color: '#1d656d',
+        color: Color.peacockBlue,
         fontSize: 20,
     },
     myDate: {
@@ -65,7 +66,7 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     friendDate: {
-        color: '#1d656d',
+        color: Color.peacockBlue,
     },
     viewSentByMe: {
         justifyContent: 'flex-end',

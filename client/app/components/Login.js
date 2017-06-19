@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TextInput, Button, StyleSheet } from 'react-native';
+import Color from '../styles/Color';
 
 export default class Login extends React.Component {
     static navigationOptions = {
@@ -27,6 +28,7 @@ export default class Login extends React.Component {
                 <TextInput style={styles.textInput} placeholder="password" />
                 <Button
                     onPress={this.onPressLoginButton.bind(this)}
+                    color={Color.peacockBlue}
                     title="Login"
                 />
             </View>
