@@ -41,6 +41,11 @@ export default class ChatRoom extends React.Component {
         });
     }
 
+    send() {
+        this.sendMessage();
+        this._textInput.clear();
+    }
+
     render() {
         const { params } = this.props.navigation.state;
 
@@ -68,13 +73,16 @@ export default class ChatRoom extends React.Component {
                         onChangeText={(text) => {
                             this.state.msg = text;
                         }}
+                        onSubmitEditing={() => {
+                            this.send();
+                        }}
+                        returnKeyType='send'
                     />
                     <View style={styles.sendButton}>
                         <Button
                             color={Color.peacockBlue}
                             onPress={() => {
-                                this.sendMessage()
-                                this._textInput.clear();
+                                this.send();
                             }}
                             title="전송"
                         />
