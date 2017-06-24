@@ -1,0 +1,20 @@
+version: '3'
+services:
+  api:
+    build: ./api-server/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "msg"
+  msg:
+    build: ./msg-server/
+    depends_on:
+      - "mq"
+      - "redis"
+  redis:
+    image: redis
+  mq:
+    image: "rabbitmq:3"
+    hostname: "msg-mq"
+    ports:
+      - "5672:5672"
