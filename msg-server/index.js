@@ -14,12 +14,12 @@ function putMsgToRedis(msg) {
     redisClient.lpush(`c:${chatMsg.id}`, msg);
 }
 
-const amqp = require('amqplib/callback_api');
+const amqp = require('amqplib');
 const redis = require('redis');
 const redisClient = redis.createClient();
 
-amqp.connect(config.rabbitmq.host, (err, connection) => {
-    connection.createChannel((err, channel) => {
+amqp.connect(config.rabbitmq.host).then((connection) => {
+    connection.createChannel().then((channel) => {
         const queues = getQueues(config.rabbitmq.queuePrefix, config.rabbitmq.numQueue);
 
         queues.map((queue) => {
@@ -31,5 +31,9 @@ amqp.connect(config.rabbitmq.host, (err, connection) => {
                 channel.ack(message);
             });
         });
+    }, (err) => {
+        console.log(`Creating channel failed - ${err}`);
     });
+}, (err) => {
+    console.log(`Connection failed - ${err}`);
 });
