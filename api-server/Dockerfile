@@ -4,6 +4,6 @@ RUN mkdir /myapp
 WORKDIR /myapp
 ADD Gemfile /myapp/Gemfile
 ADD Gemfile.lock /myapp/Gemfile.lock
-RUN bundle install
+RUN gem install bundler && bundle install
 ADD . /myapp
 CMD ["bin/bundle", "exec", "rails", "s"]
