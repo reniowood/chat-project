@@ -4,4 +4,4 @@ WORKDIR /myapp
 COPY package.json /myapp
 RUN npm install
 COPY . /myapp
-CMD ["npm", "start"]
+CMD ["npm", "start", "$RUN_ENV"]

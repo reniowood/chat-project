@@ -6,4 +6,5 @@ ADD Gemfile /myapp/Gemfile
 ADD Gemfile.lock /myapp/Gemfile.lock
 RUN gem install bundler && bundle install
 ADD . /myapp
-CMD ["bin/bundle", "exec", "rails", "s"]
+RUN bin/rails db:migrate
+CMD ["bin/bundle", "exec", "rails", "s", "$RUN_ENV"]
