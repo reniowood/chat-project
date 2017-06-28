@@ -8,9 +8,11 @@ services:
       - "msg"
   msg:
     build: ./msg-server/
+    network_mode: "host"
     depends_on:
       - "mq"
       - "redis"
+    command: ["./wait-for-it.sh", "mq:5672", "-t", "10", "--", "npm", "start"]
   redis:
     image: redis
   mq:
