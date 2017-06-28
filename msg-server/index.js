@@ -16,7 +16,16 @@ function putMsgToRedis(msg) {
 
 const amqp = require('amqplib');
 const redis = require('redis');
-const redisClient = redis.createClient();
+const redisClient = redis.createClient({
+    host: 'redis',
+    retry_strategy: (options) => {
+        if (options.attempt > 5) {
+            return undefined;
+        }
+
+        return Math.min(options.attempt * 100, 1000);
+    }
+});
 
 amqp.connect(config.rabbitmq.host).then((connection) => {
     connection.createChannel().then((channel) => {
