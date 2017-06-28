@@ -2,6 +2,8 @@ version: '2'
 services:
   api:
     build: ./api-server/
+    environment:
+      - RAILS_ENV=$RUN_ENV
     ports:
       - "3000:3000"
     depends_on:
