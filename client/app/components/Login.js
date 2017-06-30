@@ -21,16 +21,31 @@ export default class Login extends React.Component {
         navigate('ChatList', { userId });
     }
 
+    onPressRegisterButton() {
+        const { navigate } = this.props.navigation;
+
+        navigate('Register');
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <TextInput style={styles.textInput} placeholder="email" />
-                <TextInput style={styles.textInput} placeholder="password" />
-                <Button
-                    onPress={this.onPressLoginButton.bind(this)}
-                    color={Color.peacockBlue}
-                    title="Login"
-                />
+                <View>
+                    <TextInput style={styles.textInput} placeholder="email" />
+                    <TextInput style={styles.textInput} placeholder="password" />
+                </View>
+                <View>
+                    <Button
+                        onPress={this.onPressLoginButton.bind(this)}
+                        color={Color.peacockBlue}
+                        title="Login"
+                    />
+                    <Button
+                        onPress={this.onPressRegisterButton.bind(this)}
+                        color={Color.peacockBlue}
+                        title="Register"
+                    />
+                </View>
             </View>
         );
     }
