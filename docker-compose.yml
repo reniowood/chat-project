@@ -2,11 +2,16 @@ version: '2'
 services:
   api:
     build: ./api-server/
+    entrypoint: ["./run.sh"]
     environment:
       - RAILS_ENV=$RUN_ENV
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
     ports:
       - "3000:3000"
+    links:
+      - "db"
     depends_on:
+      - "db"
       - "msg"
   db:
     image: mysql
@@ -14,6 +19,8 @@ services:
       - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
     volumes:
       - $HOME/mysql:/var/lib/mysql
+    ports:
+      - "3306:3306"
   msg:
     build: ./msg-server/
     network_mode: "host"
