@@ -8,13 +8,19 @@ services:
       - "3000:3000"
     depends_on:
       - "msg"
+  db:
+    image: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
+    volumes:
+      - $HOME/mysql:/var/lib/mysql
   msg:
     build: ./msg-server/
     network_mode: "host"
     depends_on:
       - "mq"
       - "redis"
-    command: ["./wait-for-it.sh", "mq:5672", "-t", "10", "--", "npm", "start"]
+    command: ["./wait-for-it.sh", "mq:5672", "-t", "15", "--", "npm", "start"]
   redis:
     image: redis
   mq:

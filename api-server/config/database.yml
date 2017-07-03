@@ -5,8 +5,12 @@
 #   gem 'sqlite3'
 #
 default: &default
-  adapter: sqlite3
+  adapter: mysql
+  encoding: utf8
+  database: chat_development
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: root
+  password: <%= ENV['MYSQL_ROOT_PASSWORD'] %>
   timeout: 5000
 
 development:
