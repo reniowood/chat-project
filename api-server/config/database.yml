@@ -9,7 +9,7 @@ default: &default
   encoding: utf8
   database: chat_development
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  host: db
+  host: <%= ENV['MYSQL_HOST'] || "db" %>
   username: root
   password: <%= ENV['MYSQL_ROOT_PASSWORD'] %>
   timeout: 5000
