@@ -5,6 +5,16 @@ class UsersController < ApplicationController
         user = User.create(name: params[:name], email: params[:email], password: params[:password])
         if user && user.valid?
             head :ok
+        elsif user.has_invalid_email?
+            render json: { field: :email }, status: :bad_request
+        elsif user.has_duplicate_email?
+            head :conflict
+        elsif user.has_empty_email?
+            render json: { field: :email }, status: :bad_request
+        elsif user.has_empty_password?
+            render json: { field: :password }, status: :bad_request
+        elsif user.has_too_short_password?
+            render json: { field: :password }, status: :bad_request
         else
             head :internal_server_error
         end
