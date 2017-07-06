@@ -6,4 +6,4 @@ ADD Gemfile /myapp/Gemfile
 ADD Gemfile.lock /myapp/Gemfile.lock
 RUN gem install bundler && bundle install
 ADD . /myapp
-CMD ["bin/bundle", "exec", "rails", "s"]
+ENTRYPOINT ["bin/bundle", "exec", "rails", "s"]
