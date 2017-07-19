@@ -2,7 +2,7 @@ class User < ApplicationRecord
     has_secure_password
     has_secure_token
     
-    validates :email, :password, presence: true
+    validates :email, :name, :password, presence: true
     validates_uniqueness_of :email
     validates_email_format_of :email
     validates :password, length: { minimum: 8 }
@@ -20,6 +20,10 @@ class User < ApplicationRecord
 
     def has_empty_email?
         self.invalid? && self.errors.details[:email].any? { |error| error[:error] == :blank }
+    end
+
+    def has_empty_name?
+        self.invalid? && self.errors.details[:name].any? { |error| error[:error] == :blank }
     end
 
     def has_empty_password?

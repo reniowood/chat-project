@@ -11,6 +11,8 @@ class UsersController < ApplicationController
             head :conflict
         elsif user.has_empty_email?
             render json: { field: :email }, status: :bad_request
+        elsif user.has_empty_name?
+            render json: { field: :name }, status: :bad_request
         elsif user.has_empty_password?
             render json: { field: :password }, status: :bad_request
         elsif user.has_too_short_password?
