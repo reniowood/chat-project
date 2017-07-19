@@ -7,7 +7,7 @@ import User from '../models/User';
 let realm = new Realm({ schema: [User] });
 
 export default class UserService {
-    static register(email, password, confirmPassword) {
+    static register(email, name, password, confirmPassword) {
         return new Promise((resolve, reject) => {
             if (password !== confirmPassword) {
                 reject(new PasswordNotConfirmedError("패스워드가 맞지 않습니다."));
@@ -21,6 +21,7 @@ export default class UserService {
                 },
                 body: JSON.stringify({
                     email,
+                    name,
                     password,
                 }),
             }).then((response) => {

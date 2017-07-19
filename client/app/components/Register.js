@@ -13,6 +13,7 @@ export default class Register extends React.Component {
 
         this.state = {
             email: '',
+            name: '',
             password: '',
             confirmPassword: '',
         };
@@ -21,7 +22,7 @@ export default class Register extends React.Component {
     onPressRegisterButton() {
         const { navigate } = this.props.navigation;
 
-        UserService.register(this.state.email, this.state.password, this.state.confirmPassword)
+        UserService.register(this.state.email, this.state.name, this.state.password, this.state.confirmPassword)
         .then(() => {
             Alert.alert('등록', '등록 완료');
             Keyboard.dismiss();
@@ -41,6 +42,13 @@ export default class Register extends React.Component {
                         this.state.email = text;
                     }}
                     placeholder="email"
+                />
+                <TextInput
+                    style={styles.textInput}
+                    onChangeText={(text) => {
+                        this.state.name = text;
+                    }}
+                    placeholder="name"
                 />
                 <TextInput
                     style={styles.textInput}
