@@ -12,8 +12,9 @@ export default class Login extends React.Component {
     constructor() {
         super();
 
+        const user = UserService.getLastUser();
         this.state = {
-            email: '',
+            email: user ? user.email : '',
             password: '',
         };
     }
@@ -23,6 +24,7 @@ export default class Login extends React.Component {
 
         UserService.getAuthToken(this.state.email, this.state.password)
         .then((token) => {
+            UserService.saveToken(this.state.email, token);
             ChatService.getChatList(token).then((chatList) => {
                 Keyboard.dismiss();
                 navigate('ChatList', { chatList });
@@ -53,6 +55,7 @@ export default class Login extends React.Component {
                             this.state.email = text;
                         }}
                         placeholder="email"
+                        defaultValue={this.state.email}
                     />
                     <TextInput
                         style={styles.textInput}

@@ -1,6 +1,10 @@
 import base64 from 'base-64';
+import Realm from 'realm';
 import Config from '../config.json';
 import PasswordNotConfirmedError from '../errors/PasswordNotConfirmedError';
+import User from '../models/User';
+
+let realm = new Realm({ schema: [User] });
 
 export default class UserService {
     static register(email, password, confirmPassword) {
@@ -62,5 +66,27 @@ export default class UserService {
                 }
             }).then((body) => resolve(body.token));
         });
+    }
+    static getLastUser() {
+        const users = realm.objects('User');
+        
+        return users[users.length - 1];
+    }
+    static saveToken(email, token) {
+        const users = realm.objects('User').filtered(`email = "${email}"`);
+
+        if (users.length == 0) {
+            realm.write(() => {
+                const user = realm.create('User', {
+                    email,
+                    token,
+                });
+            });
+        } else {
+            const user = users[0];
+            realm.write(() => {
+                user.token = token;
+            });
+        }
     }
 }
