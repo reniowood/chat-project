@@ -9,6 +9,8 @@ class User < ApplicationRecord
 
     has_many :user_chats
     has_many :chats, through: :user_chats
+    has_many :contacts, foreign_key: :owner_id
+    has_many :users, through: :contacts
 
     def has_invalid_email?
         self.invalid? && self.errors.details[:email].any? { |error| error[:error] == :invalid_email_address }
