@@ -5,6 +5,7 @@ export default class User {
         properties: {
             email: 'string',
             token: { type: 'string', optional: true },
+            lastLogIn: 'date',
         },
     }
 }

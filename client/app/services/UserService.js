@@ -72,24 +72,26 @@ export default class UserService {
         });
     }
     static getLastUser() {
-        const users = realm.objects('User');
+        const users = realm.objects('User').sorted('lastLogIn');
         
         return users[users.length - 1];
     }
     static saveToken(email, token) {
         const users = realm.objects('User').filtered(`email = "${email}"`);
-
+        
         if (users.length == 0) {
             realm.write(() => {
                 const user = realm.create('User', {
                     email,
                     token,
+                    lastLogIn: new Date(),
                 });
             });
         } else {
             const user = users[0];
             realm.write(() => {
                 user.token = token;
+                user.lastLogIn = new Date();
             });
         }
     }
