@@ -23,11 +23,11 @@ export default class Login extends React.Component {
         const { navigate } = this.props.navigation;
 
         UserService.getAuthToken(this.state.email, this.state.password)
-        .then((token) => {
+        .then(({userId, token}) => {
             UserService.saveToken(this.state.email, token);
             ChatService.getChatList(token).then((chatList) => {
                 Keyboard.dismiss();
-                navigate('ChatList', { chatList });
+                navigate('ChatList', { chatList, userId, token });
             });
         })
         .catch((error) => {

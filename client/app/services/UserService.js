@@ -65,7 +65,10 @@ export default class UserService {
                 } else {
                     reject(new Error("로그인에 실패했습니다."));
                 }
-            }).then((body) => resolve(body.token));
+            }).then((body) => resolve({
+                userId: body.id,
+                token: body.token,
+            }));
         });
     }
     static getLastUser() {
@@ -89,5 +92,21 @@ export default class UserService {
                 user.token = token;
             });
         }
+    }
+    static getContacts(token, id) {
+        return new Promise((resolve, reject) => {
+            fetch(`${Config.API_URL}/users/${id}/contacts`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                },
+            }).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    reject(new Error("연락처 불러오기에 실패했습니다."));
+                }
+            }).then((body) => resolve(body));
+        });
     }
 }
