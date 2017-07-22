@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
+import UserListItem from '../components/UserListItem';
 import UserService from '../services/UserService';
 
 export default class Contacts extends React.Component {
@@ -20,7 +21,6 @@ export default class Contacts extends React.Component {
 
         UserService.getContacts(params.token, params.userId)
         .then((contacts) => {
-            console.log('contacts: ' + contacts);
             this.setState({
                 contacts: contacts.map((contact) => {
                     return Object.assign(contact, {
@@ -31,12 +31,16 @@ export default class Contacts extends React.Component {
         });
     }
 
+    onPressUserListItem() {
+
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <FlatList
                     data={this.state.contacts}
-                    renderItem={({item}) => <Text>{item.name}</Text>}
+                    renderItem={({item}) => <UserListItem item={item} onPressUserListItem={this.onPressUserListItem.bind(this)} />}
                 />
             </View>
         );
