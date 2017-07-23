@@ -13,14 +13,23 @@ export default class ChatList extends React.Component {
         const { navigate } = this.props.navigation;
         const { params } = this.props.navigation.state;
 
-        navigate('ChatRoom', { userId: params.userId, name: item.name });
+        navigate('ChatRoom', {
+            token: params.token,
+            userId: params.userId,
+            chatId: item.id,
+            name: item.name
+        });
     }
 
     onPressAddChatButton() {
         const { navigate } = this.props.navigation;
         const { params } = this.props.navigation.state;
 
-        navigate('Contacts', { userId: params.userId, token: params.token });
+        navigate('Contacts', {
+            token: params.token,
+            userId: params.userId,
+            token: params.token
+        });
     }
 
     render() {
@@ -30,7 +39,7 @@ export default class ChatList extends React.Component {
             <View style={styles.container}>
                 <FlatList
                     data={params.chatList}
-                    renderItem={({item}) => <ChatListItem item={item} onPressChatListItem={this.onPressChatListItem.bind(this, item)} />}
+                    renderItem={({item}) => <ChatListItem key={item.id} item={item} onPressChatListItem={this.onPressChatListItem.bind(this, item)} />}
                 />
                 <ActionButton
                     buttonColor={Color.candyApple}

@@ -55,6 +55,7 @@ export default class UserService {
             fetch(`${Config.API_URL}/token`, {
                 method: 'GET',
                 headers: {
+                    'Accept': 'application/json',
                     'Authorization': 'Basic ' + base64.encode(`${email}:${password}`),
                 },
             }).then((response) => {
@@ -100,6 +101,7 @@ export default class UserService {
             fetch(`${Config.API_URL}/users/${id}/contacts`, {
                 method: 'GET',
                 headers: {
+                    'Accept': 'application/json',
                     'Authorization': `Token ${token}`,
                 },
             }).then((response) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
 import UserListItem from '../components/UserListItem';
 import UserService from '../services/UserService';
+import ChatService from '../services/ChatService';
 
 export default class Contacts extends React.Component {
     static navigationOptions = {
@@ -31,8 +32,23 @@ export default class Contacts extends React.Component {
         });
     }
 
-    onPressUserListItem() {
+    onPressUserListItem(item) {
+        const { navigate } = this.props.navigation;
+        const { params } = this.props.navigation.state;
 
+        console.log('params');
+        console.log(params);
+
+        ChatService.createChat(params.token, item.id)
+        .then((chatId) => {
+            console.log('chatId: ' + chatId);
+            navigate('ChatRoom', {
+                token: params.token,
+                userId: params.userId,
+                chatId,
+                name: item.name
+            });
+        });
     }
 
     render() {
@@ -40,7 +56,7 @@ export default class Contacts extends React.Component {
             <View style={styles.container}>
                 <FlatList
                     data={this.state.contacts}
-                    renderItem={({item}) => <UserListItem item={item} onPressUserListItem={this.onPressUserListItem.bind(this)} />}
+                    renderItem={({item}) => <UserListItem item={item} onPressUserListItem={this.onPressUserListItem.bind(this, item)} />}
                 />
             </View>
         );
