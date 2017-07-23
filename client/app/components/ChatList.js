@@ -39,7 +39,8 @@ export default class ChatList extends React.Component {
             <View style={styles.container}>
                 <FlatList
                     data={params.chatList}
-                    renderItem={({item}) => <ChatListItem key={item.id} item={item} onPressChatListItem={this.onPressChatListItem.bind(this, item)} />}
+                    keyExtractor={item => item.id}
+                    renderItem={({item}) => <ChatListItem item={item} onPressChatListItem={this.onPressChatListItem.bind(this, item)} />}
                 />
                 <ActionButton
                     buttonColor={Color.candyApple}
