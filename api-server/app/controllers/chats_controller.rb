@@ -4,8 +4,21 @@ class ChatsController < ApplicationController
     end
     
     def create
-        chat = Chat.create
-        chat.users = [user] + params[:user_ids].map { |user_id| User.find_by_id(user_id) } .reject { |user| user.nil? }
+        user_ids = params[:user_ids]
+        if user_ids.nil? or user_ids.empty?
+            head :bad_request and return
+        end
+        
+        users = [user] + user_ids.map { |user_id| User.find_by_id(user_id) } .reject { |user| user.nil? }
+        chat_name = create_chat_name(users)
+        
+        chat = Chat.create(name: chat_name)
+        users.map do |user|
+            user.chats << chat
+            user.save!
+        end
+
+        logger.debug chat
 
         render json: { chat_id: chat.id }
     end
@@ -13,7 +26,12 @@ class ChatsController < ApplicationController
     def show
         chat = Chat.find_by_id(params[:id])
         user_ids = chat.users.map { |user| user.id }
-        render json: { chat: chat.to_json(only: [:id, :name]), user_ids: user_ids }
+        messages = chat.get_messages
+        render json: {
+            chat: chat.to_json(only: [:id, :name]),
+            user_ids: user_ids,
+            messages: messages
+        }
     end
     
     def update
@@ -30,11 +48,7 @@ class ChatsController < ApplicationController
         head :ok
     end
 
-    private
-
-    def user
-        token = request.headers['Authorization'].split[1]
-        @user ||= User.find_by_token(token)
+    def create_chat_name(users)
+        "#{users.map(&:name).join(", ")}의 채팅방"
     end
-    helper_method :user
 end

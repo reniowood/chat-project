@@ -17,6 +17,8 @@ module ChatProject
     config.api_only = true
     config.debug_exception_response_format = :api
 
+    config.logger = Logger.new(STDOUT)
+
     config.mq = config_for(:mq)
   end
 end

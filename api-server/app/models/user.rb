@@ -2,10 +2,10 @@ class User < ApplicationRecord
     has_secure_password
     has_secure_token
     
-    validates :email, :name, :password, presence: true
+    validates :email, :name, presence: true
     validates_uniqueness_of :email
     validates_email_format_of :email
-    validates :password, length: { minimum: 8 }
+    validates :password, presence: true, length: { minimum: 8 }, on: [:create]
 
     has_many :user_chats
     has_many :chats, through: :user_chats

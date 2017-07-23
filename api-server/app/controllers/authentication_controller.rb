@@ -7,7 +7,7 @@ class AuthenticationController < ApplicationController
         authenticate_with_http_basic do |email, password|
             user = User.find_by_email(email)
             if user && user.authenticate(password)
-                render json: { token: user.token } and return
+                render json: { id: user.id, token: user.token } and return
             else
                 head :unauthorized
             end

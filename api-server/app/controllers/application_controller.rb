@@ -18,4 +18,10 @@ class ApplicationController < ActionController::API
         auth_headers = auth_headers.split
         auth_headers.length == 2 and auth_headers[0] == 'Token' and User.find_by_token(auth_headers[1])
     end
+
+    def user
+        token = request.headers['Authorization'].split[1]
+        @user ||= User.find_by_token(token)
+    end
+    helper_method :user
 end
