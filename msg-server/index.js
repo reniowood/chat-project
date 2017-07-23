@@ -10,22 +10,25 @@ function getQueues(queuePrefix, numQueue) {
 }
 
 function putMsgToRedis(msg) {
+    const redisClient = redis.createClient({
+        host: 'localhost',
+        retry_strategy: (options) => {
+            if (options.attempt > 5) {
+                return undefined;
+            }
+
+            return Math.min(options.attempt * 100, 1000);
+        }
+    });
     const chatMsg = JSON.parse(msg);
-    redisClient.lpush(`c:${chatMsg.id}`, msg);
+
+    redisClient.lpush(`c:${chatMsg.id}`, msg, (err, res) => {
+        console.log(err, res);
+    });
 }
 
 const amqp = require('amqplib');
 const redis = require('redis');
-const redisClient = redis.createClient({
-    host: 'redis',
-    retry_strategy: (options) => {
-        if (options.attempt > 5) {
-            return undefined;
-        }
-
-        return Math.min(options.attempt * 100, 1000);
-    }
-});
 
 amqp.connect(config.rabbitmq.host).then((connection) => {
     connection.createChannel().then((channel) => {
