@@ -30,6 +30,8 @@ services:
     command: ["./wait-for-it.sh", "mq:5672", "-t", "15", "--", "npm", "start"]
   redis:
     image: redis
+    ports:
+      - "6379:6379"
   mq:
     image: "rabbitmq:3"
     hostname: "msg-mq"
