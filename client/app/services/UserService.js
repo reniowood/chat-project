@@ -66,10 +66,14 @@ export default class UserService {
                 } else {
                     reject(new Error("로그인에 실패했습니다."));
                 }
-            }).then((body) => resolve({
-                userId: body.id,
-                token: body.token,
-            }));
+            }).then((body) => {
+                if (body !== undefined) {
+                    resolve({
+                        userId: body.id,
+                        token: body.token,
+                    });
+                }
+            });
         });
     }
     static getLastUser() {
@@ -110,7 +114,11 @@ export default class UserService {
                 } else {
                     reject(new Error("연락처 불러오기에 실패했습니다."));
                 }
-            }).then((body) => resolve(body));
+            }).then((body) => {
+                if (body !== undefined) {
+                    resolve(body);
+                }
+            });
         });
     }
 }
