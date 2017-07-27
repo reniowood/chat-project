@@ -18,8 +18,6 @@ class ChatsController < ApplicationController
             user.save!
         end
 
-        logger.debug chat
-
         render json: { chat_id: chat.id }
     end
     
@@ -47,6 +45,8 @@ class ChatsController < ApplicationController
 
         head :ok
     end
+
+    private
 
     def create_chat_name(users)
         "#{users.map(&:name).join(", ")}의 채팅방"

@@ -37,4 +37,10 @@ class UsersController < ApplicationController
         user = User.find_by_id(params[:id])
         user.destroy
     end
+
+    def update_fcm_token
+        user = User.find_by_id(params[:user_id])
+        user.fcm_token = params[:fcm_token]
+        user.save
+    end
 end
