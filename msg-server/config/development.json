@@ -3,5 +3,13 @@
         "host": "amqp://localhost",
         "queuePrefix": "send_msg",
         "numQueue": 2
+    },
+    "mysql": {
+        "host": "localhost",
+        "user": "root",
+        "database": "chat_development"
+    },
+    "fcm": {
+        "url": "https://fcm.googleapis.com/fcm/send"
     }
 }

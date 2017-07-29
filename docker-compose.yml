@@ -24,6 +24,8 @@ services:
   msg:
     build: ./msg-server/
     network_mode: "host"
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
     depends_on:
       - "mq"
       - "redis"

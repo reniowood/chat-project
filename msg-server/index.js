@@ -1,5 +1,6 @@
 const phase = process.argv[2] || 'development';
 const config = require(`./config/${phase}.json`);
+const keys = require(`./config/keys.json`);
 
 function getQueues(queuePrefix, numQueue) {
     let queues = [];
@@ -24,11 +25,61 @@ function putMsgToRedis(msg) {
 
     redisClient.lpush(`c:${chatMsg.id}`, msg, (err, res) => {
         console.log(err, res);
+        if (err === null) {
+            connection.query('SELECT user_id FROM users_chats WHERE chat_id = ?', [chatMsg.id], (err, results, fields) => {
+                if (err) {
+                    throw err;
+                }
+
+                const userIds = results.map((result) => result.user_id).filter((userId) => userId != chatMsg.msg.senderId);
+                connection.query('SELECT fcm_token FROM users WHERE id IN (?)', [userIds], (err, results, fields) => {
+                    if (err) {
+                        throw err;
+                    }
+
+                    results.map((result) => pushByFCM(result.fcm_token, chatMsg.msg.msg));
+                });
+            });
+        }
+    });
+}
+
+function pushByFCM(fcmToken, message) {
+    console.log('fcmToken: ' + fcmToken);
+    console.log('message: ' + message);
+
+    request({
+        url: config.fcm.url,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `key=${keys.fcm}`,
+        },
+        json: true,
+        body: {
+            notification: {
+                title: "메세지가 도착했습니다",
+                body: message,
+            },
+            to: fcmToken,
+        }
+    }, (error, response, body) => {
+        console.log(error);
+        console.log(response.statusCode + " " + response.statusMessage);
+        console.log(body);
     });
 }
 
 const amqp = require('amqplib');
 const redis = require('redis');
+const mysql = require('mysql');
+const request = require('request');
+
+const connection = mysql.createConnection(Object.assign(config.mysql, {
+    password: process.env.MYSQL_ROOT_PASSWORD
+}));
+
+connection.connect();
 
 amqp.connect(config.rabbitmq.host).then((connection) => {
     connection.createChannel().then((channel) => {
@@ -49,3 +100,5 @@ amqp.connect(config.rabbitmq.host).then((connection) => {
 }, (err) => {
     console.log(`Connection failed - ${err}`);
 });
+
+// connection.end();
