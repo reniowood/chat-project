@@ -27,8 +27,7 @@ export default class ChatList extends React.Component {
 
         navigate('Contacts', {
             token: params.token,
-            userId: params.userId,
-            token: params.token
+            userId: params.userId
         });
     }
 

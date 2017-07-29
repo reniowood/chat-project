@@ -2,6 +2,7 @@ import base64 from 'base-64';
 import Realm from 'realm';
 import Config from '../config.json';
 import PasswordNotConfirmedError from '../errors/PasswordNotConfirmedError';
+import FCMService from './FCMService';
 import User from '../models/User';
 
 let realm = new Realm({ schema: [User] });
@@ -70,43 +71,70 @@ export default class UserService {
                 if (body !== undefined) {
                     resolve({
                         userId: body.id,
-                        token: body.token,
+                        authToken: body.token,
                     });
                 }
             });
         });
     }
     static getLastUser() {
-        const users = realm.objects('User').sorted('lastLogIn');
+        const users = realm.objects('User').sorted('lastLoggedIn');
         
         return users[users.length - 1];
     }
-    static saveToken(email, token) {
+    static saveAuthToken(email, authToken) {
         const users = realm.objects('User').filtered(`email = "${email}"`);
         
         if (users.length == 0) {
             realm.write(() => {
                 const user = realm.create('User', {
                     email,
-                    token,
-                    lastLogIn: new Date(),
+                    authToken,
+                    lastLoggedIn: new Date(),
+                    isLoggedIn: true,
                 });
             });
         } else {
             const user = users[0];
             realm.write(() => {
-                user.token = token;
-                user.lastLogIn = new Date();
+                user.authToken = authToken;
+                user.lastLoggedIn = new Date();
+                user.isLoggedIn = true;
             });
         }
     }
-    static getContacts(token, id) {
+    static updateFCMToken(authToken, id) {
+        return new Promise((resolve, reject) => {
+            FCMService.getFCMToken((fcmToken) => {
+                fetch(`${Config.API_URL}/users/${id}/fcm_token`, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Token ${authToken}`,
+                    },
+                    body: JSON.stringify({
+                        fcm_token: fcmToken,
+                    }),
+                }).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        resolve();
+                    } else {
+                        reject(new Error("푸시 등록에 실패했습니다."));
+                    }
+                }).catch((error) => {
+                    reject(new Error("푸시 등록에 실패했습니다."));
+                });
+            });
+        });
+    }
+    static getContacts(authToken, id) {
         return new Promise((resolve, reject) => {
             fetch(`${Config.API_URL}/users/${id}/contacts`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',
-                    'Authorization': `Token ${token}`,
+                    'Authorization': `Token ${authToken}`,
                 },
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {

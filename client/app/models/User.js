@@ -4,8 +4,9 @@ export default class User {
         primaryKey: 'email',
         properties: {
             email: 'string',
-            token: { type: 'string', optional: true },
-            lastLogIn: 'date',
+            authToken: { type: 'string', optional: true },
+            lastLoggedIn: 'date',
+            isLoggedIn: 'bool',
         },
     }
 }
