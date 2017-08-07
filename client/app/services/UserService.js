@@ -102,10 +102,10 @@ export default class UserService {
             });
         }
     }
-    static updateFCMToken(authToken, id) {
+    static updateFCMToken(authToken) {
         return new Promise((resolve, reject) => {
             FCM.getFCMToken().then((fcmToken) => {
-                fetch(`${Config.API_URL}/users/${id}/fcm_token`, {
+                fetch(`${Config.API_URL}/users/fcm_token`, {
                     method: 'PUT',
                     headers: {
                         'Accept': 'application/json',
