@@ -31,13 +31,13 @@ function putMsgToRedis(msg) {
                     throw err;
                 }
 
-                const userIds = results.map((result) => result.user_id).filter((userId) => userId != chatMsg.msg.senderId);
+                const userIds = results.map((result) => result.user_id).filter((userId) => userId != chatMsg.sender_id);
                 connection.query('SELECT fcm_token FROM users WHERE id IN (?)', [userIds], (err, results, fields) => {
                     if (err) {
                         throw err;
                     }
 
-                    results.map((result) => pushByFCM(result.fcm_token, chatMsg.msg.msg));
+                    results.map((result) => pushByFCM(result.fcm_token, chatMsg));
                 });
             });
         }
@@ -59,10 +59,11 @@ function pushByFCM(fcmToken, message) {
         body: {
             notification: {
                 title: "메세지가 도착했습니다",
-                body: message,
+                body: message.msg.msg,
             },
+            data: message,
             to: fcmToken,
-        }
+        },
     }, (error, response, body) => {
         console.log(error);
         console.log(response.statusCode + " " + response.statusMessage);
