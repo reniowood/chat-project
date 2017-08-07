@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, FlatList, TextInput, Button, StyleSheet } from 'react-native';
 import ReversedFlatList from 'react-native-reversed-flat-list';
+import FCM, { FCMEvent } from 'react-native-fcm';
 import ChatService from '../services/ChatService';
 import ChatBubble from './ChatBubble';
 import Color from '../styles/Color';
@@ -20,12 +21,35 @@ export default class ChatRoom extends React.Component {
         this.lastKey = -1;
     }
 
+    createMessageFromPushNotification(notification) {
+        this.lastKey += 1;
+
+        const message = JSON.parse(notification.msg);
+        console.log(JSON.stringify(message));
+
+        return {
+            key: this.lastKey,
+            sentByMe: false,
+            date: new Date(message.date),
+            msg: message.msg,
+        };
+    }
+
     componentDidMount() {
         const { params } = this.props.navigation.state;
 
+        this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
+            console.log('notification: ' + JSON.stringify(notification));
+
+            this.setState({
+                data: [
+                    ...this.state.data,
+                    this.createMessageFromPushNotification(notification),
+                ],
+            })
+        });
         ChatService.getChat(params.token, params.chatId)
         .then((data) => {
-            console.log(data);
             data.messages.reverse();
             
             this.setState({
@@ -37,6 +61,10 @@ export default class ChatRoom extends React.Component {
                 }),
             });
         });
+    }
+
+    componentWillUnmount() {
+        this.notificationListener.remove();
     }
 
     sendMessage() {

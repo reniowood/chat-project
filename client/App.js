@@ -5,15 +5,12 @@ import { ScreenNavigator } from './app/components/ScreenNavigator';
 
 export default class App extends React.Component {
   componentDidMount() {
-    this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
-    });
     this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (fcmToken) => {
       const user = UserService.getLastUser();
       UserService.updateFCMToken(user.authToken);
     });
   }
   componentWillUnmount() {
-    this.notificationListener.remove();
     this.refreshTokenListener.remove();
   }
   render() {
