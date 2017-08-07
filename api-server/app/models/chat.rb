@@ -8,13 +8,13 @@ class Chat < ApplicationRecord
     def send_message(sender_id, message)
         send_message_to_mq(sender_id, {
             id: self.id,
+            sender_id: sender_id,
             msg: message
         })
-        p "#{sender_id} - \"#{message}\""
     end
 
-    def get_messages()
-        get_messages_from_redis()
+    def get_messages(user_id)
+        get_messages_from_redis(user_id)
     end
 
     private
@@ -32,7 +32,7 @@ class Chat < ApplicationRecord
         connection.close
     end
 
-    def get_messages_from_redis()
+    def get_messages_from_redis(user_id)
         begin
             redis = Redis.new
 
@@ -40,10 +40,20 @@ class Chat < ApplicationRecord
             if result.nil?
                 return []
             else
-                return result.map { |message| JSON.parse(message) }
+                return result.map do |message|
+                    modifyMessage(message, user_id)
+                end
             end
         rescue Exception => e
             p e.message
         end
+    end
+
+    def modifyMessage(message, user_id)
+        msg = JSON.parse(message)
+
+        msg['msg']['sent_by_me'] = (user_id == msg['sender_id'])
+
+        msg
     end
 end

@@ -60,10 +60,9 @@ export default class ChatService {
             }).then((body) => resolve(body));
         });
     }
-    static sendMessage(token, chatId, senderId, msg) {
+    static sendMessage(token, chatId, msg) {
         const message = {
             date: new Date(),
-            senderId,
             msg,
         };
 

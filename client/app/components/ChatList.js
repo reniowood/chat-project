@@ -15,7 +15,6 @@ export default class ChatList extends React.Component {
 
         navigate('ChatRoom', {
             token: params.token,
-            userId: params.userId,
             chatId: item.id,
             name: item.name
         });
@@ -26,8 +25,7 @@ export default class ChatList extends React.Component {
         const { params } = this.props.navigation.state;
 
         navigate('Contacts', {
-            token: params.token,
-            userId: params.userId
+            token: params.token
         });
     }
 

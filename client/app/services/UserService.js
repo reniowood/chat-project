@@ -70,7 +70,6 @@ export default class UserService {
             }).then((body) => {
                 if (body !== undefined) {
                     resolve({
-                        userId: body.id,
                         authToken: body.token,
                     });
                 }
@@ -128,9 +127,9 @@ export default class UserService {
             });
         });
     }
-    static getContacts(authToken, id) {
+    static getContacts(authToken) {
         return new Promise((resolve, reject) => {
-            fetch(`${Config.API_URL}/users/${id}/contacts`, {
+            fetch(`${Config.API_URL}/users/contacts`, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',

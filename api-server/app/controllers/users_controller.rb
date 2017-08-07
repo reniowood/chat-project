@@ -23,23 +23,19 @@ class UsersController < ApplicationController
     end
 
     def show
-        user = User.find_by_id(params[:id])
         render json: user, only: [:name, :email]
     end
 
     def update
-        user = User.find_by_id(params[:id])
         user.name = params[:name] if params[:name]
         user.save
     end
 
     def destroy
-        user = User.find_by_id(params[:id])
         user.destroy
     end
 
     def update_fcm_token
-        user = User.find_by_id(params[:user_id])
         user.fcm_token = params[:fcm_token]
         user.save
     end

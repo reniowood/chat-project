@@ -23,16 +23,15 @@ export default class Login extends React.Component {
         const { navigate } = this.props.navigation;
 
         UserService.getAuthToken(this.state.email, this.state.password)
-        .then(({userId, authToken}) => {
+        .then(({authToken}) => {
             UserService.saveAuthToken(this.state.email, authToken);
-            UserService.updateFCMToken(authToken, userId).catch((error) => {
+            UserService.updateFCMToken(authToken).catch((error) => {
                 Alert.alert('푸시 등록', error.message);
             });
             ChatService.getChatList(authToken).then((chatList) => {
                 Keyboard.dismiss();
                 navigate('ChatList', {
                     chatList,
-                    userId,
                     token: authToken
                 });
             });

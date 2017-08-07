@@ -20,7 +20,7 @@ export default class Contacts extends React.Component {
     componentDidMount() {
         const { params } = this.props.navigation.state;
 
-        UserService.getContacts(params.token, params.userId)
+        UserService.getContacts(params.token)
         .then((contacts) => {
             this.setState({
                 contacts: contacts.map((contact) => {
@@ -44,7 +44,6 @@ export default class Contacts extends React.Component {
             console.log('chatId: ' + chatId);
             navigate('ChatRoom', {
                 token: params.token,
-                userId: params.userId,
                 chatId,
                 name: item.name
             });

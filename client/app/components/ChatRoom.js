@@ -25,6 +25,7 @@ export default class ChatRoom extends React.Component {
 
         ChatService.getChat(params.token, params.chatId)
         .then((data) => {
+            console.log(data);
             data.messages.reverse();
             
             this.setState({
@@ -41,7 +42,7 @@ export default class ChatRoom extends React.Component {
     sendMessage() {
         const { params } = this.props.navigation.state;
 
-        ChatService.sendMessage(params.token, params.chatId, params.userId, this.state.msg)
+        ChatService.sendMessage(params.token, params.chatId, this.state.msg)
         .then((sentMessage) => {
             this.lastKey += 1;
             this.setState({
@@ -49,6 +50,7 @@ export default class ChatRoom extends React.Component {
                     ...this.state.data,
                     Object.assign(sentMessage, {
                         key: this.lastKey,
+                        sent_by_me: true,
                     }),
                 ],
             });
@@ -72,7 +74,7 @@ export default class ChatRoom extends React.Component {
                             <ChatBubble
                                 style={styles.chatBubble}
                                 key={item.key}
-                                sentByMe={params.userId === item.senderId}
+                                sentByMe={item.sent_by_me}
                                 date={new Date(item.date)}
                             >
                                 {item.msg}

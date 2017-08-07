@@ -24,7 +24,7 @@ class ChatsController < ApplicationController
     def show
         chat = Chat.find_by_id(params[:id])
         user_ids = chat.users.map { |user| user.id }
-        messages = chat.get_messages
+        messages = chat.get_messages(user.id)
         render json: {
             chat: chat.to_json(only: [:id, :name]),
             user_ids: user_ids,
