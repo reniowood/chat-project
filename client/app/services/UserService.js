@@ -2,7 +2,7 @@ import base64 from 'base-64';
 import Realm from 'realm';
 import Config from '../config.json';
 import PasswordNotConfirmedError from '../errors/PasswordNotConfirmedError';
-import FCMService from './FCMService';
+import FCM from 'react-native-fcm';
 import User from '../models/User';
 
 let realm = new Realm({ schema: [User] });
@@ -105,7 +105,7 @@ export default class UserService {
     }
     static updateFCMToken(authToken, id) {
         return new Promise((resolve, reject) => {
-            FCMService.getFCMToken((fcmToken) => {
+            FCM.getFCMToken().then((fcmToken) => {
                 fetch(`${Config.API_URL}/users/${id}/fcm_token`, {
                     method: 'PUT',
                     headers: {

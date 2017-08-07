@@ -143,6 +143,7 @@ buildscript {
 }
 
 dependencies {
+    compile project(':react-native-fcm')
     compile project(':realm')
     compile fileTree(dir: "libs", include: ["*.jar"])
     // From node_modules
