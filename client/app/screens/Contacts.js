@@ -5,10 +5,6 @@ import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
 export default class Contacts extends React.Component {
-    static navigationOptions = {
-        title: 'Contacts',
-    };
-
     constructor() {
         super();
     
@@ -18,9 +14,7 @@ export default class Contacts extends React.Component {
     }
 
     componentDidMount() {
-        const { params } = this.props.navigation.state;
-
-        UserService.getContacts(params.token)
+        UserService.getContacts(this.props.token)
         .then((contacts) => {
             this.setState({
                 contacts: contacts.map((contact) => {
@@ -33,19 +27,16 @@ export default class Contacts extends React.Component {
     }
 
     onPressUserListItem(item) {
-        const { navigate } = this.props.navigation;
-        const { params } = this.props.navigation.state;
-
-        console.log('params');
-        console.log(params);
-
-        ChatService.createChat(params.token, item.id)
+        ChatService.createChat(this.props.token, item.id)
         .then((chatId) => {
-            console.log('chatId: ' + chatId);
-            navigate('ChatRoom', {
-                token: params.token,
-                chatId,
-                name: item.name
+            this.props.navigator.pop();
+            this.props.navigator.push({
+                screen: 'com.client.ChatRoom',
+                passProps: {
+                    token: this.props.token,
+                    chatId,
+                    name: item.name
+                },
             });
         });
     }

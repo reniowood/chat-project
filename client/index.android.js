@@ -1,10 +1,13 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
- */
+import { Navigation } from 'react-native-navigation';
+import { registerScreens } from './app/screens';
 
-import App from './App';
-import { AppRegistry } from 'react-native';
+registerScreens();
 
-AppRegistry.registerComponent('client', () => App);
+Navigation.startSingleScreenApp({
+    screen: {
+        screen: 'com.client.Splash',
+        navigationStyle: {},
+        navigationButton: {},
+    },
+    passProp: {},
+});

@@ -1,6 +1,7 @@
 package com.client;
 
 import android.app.Application;
+import android.support.annotation.Nullable;
 
 import com.facebook.react.ReactApplication;
 import com.evollu.react.fcm.FIRMessagingPackage;
@@ -9,31 +10,30 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.reactnativenavigation.NavigationApplication;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends Application implements ReactApplication {
-
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
-
-    @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-          new FIRMessagingPackage(),
-          new RealmReactPackage()
-      );
-    }
-  };
-
+public class MainApplication extends NavigationApplication {
   @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
+  public boolean isDebug() {
+    return BuildConfig.DEBUG;
+  }
+
+  protected List<ReactPackage> getPackages() {
+    return Arrays.<ReactPackage>asList(
+            new MainReactPackage(),
+            new FIRMessagingPackage(),
+            new RealmReactPackage()
+    );
+  }
+
+  @Nullable
+  @Override
+  public List<ReactPackage> createAdditionalReactPackages() {
+    return getPackages();
   }
 
   @Override

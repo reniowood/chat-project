@@ -20,8 +20,6 @@ export default class Login extends React.Component {
     }
 
     logIn() {
-        const { navigate } = this.props.navigation;
-
         UserService.getAuthToken(this.state.email, this.state.password)
         .then(({authToken}) => {
             UserService.saveAuthToken(this.state.email, authToken);
@@ -30,9 +28,12 @@ export default class Login extends React.Component {
             });
             ChatService.getChatList(authToken).then((chatList) => {
                 Keyboard.dismiss();
-                navigate('ChatList', {
-                    chatList,
-                    token: authToken
+                this.props.navigator.resetTo({
+                    screen: 'com.client.ChatList',
+                    passProps: {
+                        chatList,
+                        token: authToken
+                    },
                 });
             });
         })

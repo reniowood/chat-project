@@ -3,14 +3,10 @@ import { View, FlatList, TextInput, Button, StyleSheet } from 'react-native';
 import ReversedFlatList from 'react-native-reversed-flat-list';
 import FCM, { FCMEvent } from 'react-native-fcm';
 import ChatService from '../services/ChatService';
-import ChatBubble from './ChatBubble';
+import ChatBubble from '../components/ChatBubble';
 import Color from '../styles/Color';
 
 export default class ChatRoom extends React.Component {
-    static navigationOptions = ({ navigation, screenProps }) => ({
-        title: navigation.state.params.name,
-    });
-
     // state.data[0] = {key: 0, date: new Date('2017-06-01T10:00:00+09:00'), senderId: 1, msg: '안녕 뭐하구지내'}
     constructor() {
         super(); 
@@ -36,8 +32,6 @@ export default class ChatRoom extends React.Component {
     }
 
     componentDidMount() {
-        const { params } = this.props.navigation.state;
-
         this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
             console.log('notification: ' + JSON.stringify(notification));
 
@@ -48,7 +42,7 @@ export default class ChatRoom extends React.Component {
                 ],
             })
         });
-        ChatService.getChat(params.token, params.chatId)
+        ChatService.getChat(this.props.token, this.props.chatId)
         .then((data) => {
             data.messages.reverse();
             
@@ -68,9 +62,7 @@ export default class ChatRoom extends React.Component {
     }
 
     sendMessage() {
-        const { params } = this.props.navigation.state;
-
-        ChatService.sendMessage(params.token, params.chatId, this.state.msg)
+        ChatService.sendMessage(this.props.token, this.props.chatId, this.state.msg)
         .then((sentMessage) => {
             this.lastKey += 1;
             this.setState({
@@ -91,8 +83,6 @@ export default class ChatRoom extends React.Component {
     }
 
     render() {
-        const { params } = this.props.navigation.state;
-
         return (
             <View style={styles.container}>
                 <View style={styles.chatBubbleView}>
