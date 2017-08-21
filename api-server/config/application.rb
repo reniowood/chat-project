@@ -20,5 +20,6 @@ module ChatProject
     config.logger = Logger.new(STDOUT)
 
     config.mq = config_for(:mq)
+    config.redis = config_for(:redis)
   end
 end

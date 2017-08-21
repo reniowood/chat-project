@@ -34,7 +34,7 @@ class Chat < ApplicationRecord
 
     def get_messages_from_redis(user_id)
         begin
-            redis = Redis.new
+            redis = Redis.new(host: Rails.configuration.redis['host'], port: Rails.configuration.redis['port'])
 
             result = redis.lrange("c:#{self.id}", 0, -1)
             if result.nil?
