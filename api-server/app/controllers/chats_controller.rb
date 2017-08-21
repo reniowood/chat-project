@@ -10,15 +10,20 @@ class ChatsController < ApplicationController
         end
         
         users = [user] + user_ids.map { |user_id| User.find_by_id(user_id) } .reject { |user| user.nil? }
-        chat_name = create_chat_name(users)
-        
-        chat = Chat.create(name: chat_name)
-        users.map do |user|
-            user.chats << chat
-            user.save!
+        chats = user.chats.select { |chat| chat.users == users }
+
+        if chats.empty?
+            chat_name = create_chat_name(users)
+            chat = Chat.create(name: chat_name)
+            users.map do |user|
+                user.chats << chat
+                user.save!
+            end
+        else
+            chat = chats[0]
         end
 
-        render json: { chat_id: chat.id }
+        render json: { chat_id: chat.id, name: chat.name }
     end
     
     def show
