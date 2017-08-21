@@ -32,7 +32,10 @@ export default class ChatService {
                     reject(new Error("새로운 채팅방을 만들지 못했습니다."));
                 }
             }).then((body) => {
-                resolve(body.chat_id);
+                resolve({
+                    chatId: body.chat_id,
+                    name: body.name,
+                });
             });
         });
     }

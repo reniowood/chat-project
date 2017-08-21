@@ -49,22 +49,23 @@ export default class Contacts extends React.Component {
         });
     }
 
-    openChatRoom() {
+    openChatRoom(chatId, name) {
         this.props.navigator.push({
             screen: 'com.client.ChatRoom',
+            title: name,
             passProps: {
                 token: this.props.token,
                 chatId,
-                name: item.name
+                name
             },
         });
     }
 
     onPressUserListItem(item) {
         ChatService.createChat(this.props.token, item.id)
-        .then((chatId) => {
+        .then(({chatId, name}) => {
             this.closeContacts();
-            this.openChatRoom();
+            this.openChatRoom(chatId, name);
         });
     }
 
