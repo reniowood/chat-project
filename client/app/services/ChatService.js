@@ -22,9 +22,9 @@ export default class ChatService {
             HttpClient.fetchServer('chats', {
                 method: 'POST',
                 headers: HttpClient.getAuthHeaders(authToken),
-                body: JSON.stringify({
+                body: {
                     user_ids: [contactId],
-                })
+                }
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json();
@@ -60,9 +60,9 @@ export default class ChatService {
             HttpClient.fetchServer(`chats/${chatId}`, {
                 method: 'PUT',
                 headers: HttpClient.getAuthHeaders(authToken),
-                body: JSON.stringify({
+                body: {
                     msg: message,
-                })
+                }
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return resolve(message);

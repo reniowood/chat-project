@@ -65,7 +65,6 @@ export default class Contacts extends React.Component {
         .then((chatId) => {
             this.closeContacts();
             this.openChatRoom();
-            
         });
     }
 
