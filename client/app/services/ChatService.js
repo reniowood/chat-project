@@ -1,14 +1,11 @@
-import Config from '../config.json';
+import HttpClient from '../utils/HttpClient';
 
 export default class ChatService {
-    static getChatList(token) {
+    static getChatList(authToken) {
         return new Promise((resolve, reject) => {
-            fetch(`${Config.API_URL}/chats`, {
+            HttpClient.fetchServer('chats', {
                 method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Token ${token}`,
-                },
+                headers: HttpClient.getAuthHeaders(authToken),
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json();
@@ -20,15 +17,11 @@ export default class ChatService {
             }).then((body) => resolve(body.chats));
         });
     }
-    static createChat(token, contactId) {
+    static createChat(authToken, contactId) {
         return new Promise((resolve, reject) => {
-            fetch(`${Config.API_URL}/chats`, {
+            HttpClient.fetchServer('chats', {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`,
-                },
+                headers: HttpClient.getAuthHeaders(authToken),
                 body: JSON.stringify({
                     user_ids: [contactId],
                 })
@@ -43,14 +36,11 @@ export default class ChatService {
             });
         });
     }
-    static getChat(token, chatId) {
+    static getChat(authToken, chatId) {
         return new Promise((resolve, reject) => {
-            fetch(`${Config.API_URL}/chats/${chatId}`, {
+            HttpClient.fetchServer(`chats/${chatId}`, {
                 method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Token ${token}`,
-                },
+                headers: HttpClient.getAuthHeaders(authToken),
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json();
@@ -60,20 +50,16 @@ export default class ChatService {
             }).then((body) => resolve(body));
         });
     }
-    static sendMessage(token, chatId, msg) {
+    static sendMessage(authToken, chatId, msg) {
         const message = {
             date: new Date(),
             msg,
         };
 
         return new Promise((resolve, reject) => {
-            fetch(`${Config.API_URL}/chats/${chatId}`, {
+            HttpClient.fetchServer(`chats/${chatId}`, {
                 method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                    'Authorization': `Token ${token}`,
-                },
+                headers: HttpClient.getAuthHeaders(authToken),
                 body: JSON.stringify({
                     msg: message,
                 })

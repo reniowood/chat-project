@@ -1,30 +1,45 @@
 import base64 from 'base-64';
 import Realm from 'realm';
-import Config from '../config.json';
 import PasswordNotConfirmedError from '../errors/PasswordNotConfirmedError';
 import FCM from 'react-native-fcm';
+import HttpClient from '../utils/HttpClient';
 import User from '../models/User';
 
 let realm = new Realm({ schema: [User] });
 
 export default class UserService {
     static register(email, name, password, confirmPassword) {
+        const defaultErrorMessage = "신규등록에 실패했습니다.";
+
+        function checkRegisterResponseError(status, body) {
+            if (status === 409) {
+                return new Error("이미 등록된 이메일입니다.");
+            } else if (status === 400) {
+                if (body.field == "email") {
+                    return new Error("올바르지 못한 형식의 이메일입니다.");
+                } else if (body.field == "password") {
+                    return new Error("비밀번호는 8자 이상입니다.");
+                } else {
+                    return new Error(defaultErrorMessage);    
+                }
+            } else {
+                return new Error(defaultErrorMessage);
+            }
+        }
+
         return new Promise((resolve, reject) => {
             if (password !== confirmPassword) {
                 reject(new PasswordNotConfirmedError("패스워드가 맞지 않습니다."));
             }
 
-            fetch(`${Config.API_URL}/users`, {
+            HttpClient.fetchServer('users', {
                 method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
+                headers: HttpClient.defaultHeaders,
+                body: {
                     email,
                     name,
                     password,
-                }),
+                },
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     resolve();
@@ -32,33 +47,15 @@ export default class UserService {
                     response.json().then((body) => reject(this.checkRegisterResponseError(response.status, body)));
                 }
             }).catch((error) => {
-                reject(new Error("신규등록에 실패했습니다."));
+                reject(new Error(defaultErrorMessage));
             });
         });
     }
-    static checkRegisterResponseError(status, body) {
-        if (status === 409) {
-            return new Error("이미 등록된 이메일입니다.");
-        } else if (status === 400) {
-            if (body.field == "email") {
-                return new Error("올바르지 못한 형식의 이메일입니다.");
-            } else if (body.field == "password") {
-                return new Error("비밀번호는 8자 이상입니다.");
-            } else {
-                return new Error("신규등록에 실패했습니다.");    
-            }
-        } else {
-            return new Error("신규등록에 실패했습니다.");
-        }
-    }
     static getAuthToken(email, password) {
         return new Promise((resolve, reject) => {
-            fetch(`${Config.API_URL}/token`, {
+            HttpClient.fetchServer('token', {
                 method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Basic ' + base64.encode(`${email}:${password}`),
-                },
+                headers: getBasicAuthHeaders(email, password),
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json();
@@ -103,48 +100,84 @@ export default class UserService {
         }
     }
     static updateFCMToken(authToken) {
+        const defaultErrorMessage = "푸시 등록에 실패했습니다.";
+        
         return new Promise((resolve, reject) => {
             FCM.getFCMToken().then((fcmToken) => {
-                fetch(`${Config.API_URL}/users/fcm_token`, {
+                HttpClient.fetchServer('users/fcm_token', {
                     method: 'PUT',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json',
-                        'Authorization': `Token ${authToken}`,
-                    },
-                    body: JSON.stringify({
+                    headers: HttpClient.getAuthHeaders(authToken),
+                    body: {
                         fcm_token: fcmToken,
-                    }),
+                    },
                 }).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
                         resolve();
                     } else {
-                        reject(new Error("푸시 등록에 실패했습니다."));
+                        reject(new Error(defaultErrorMessage));
                     }
                 }).catch((error) => {
-                    reject(new Error("푸시 등록에 실패했습니다."));
+                    console.log(error);
+                    reject(new Error(defaultErrorMessage));
                 });
             });
         });
     }
     static getContacts(authToken) {
+        const defaultErrorMessage = "연락처 불러오기에 실패했습니다.";
+
         return new Promise((resolve, reject) => {
-            fetch(`${Config.API_URL}/users/contacts`, {
+            HttpClient.fetchServer('users/contacts', {
                 method: 'GET',
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': `Token ${authToken}`,
-                },
+                headers: HttpClient.getAuthHeaders(authToken),
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json();
                 } else {
-                    reject(new Error("연락처 불러오기에 실패했습니다."));
+                    reject(new Error(defaultErrorMessage));
                 }
             }).then((body) => {
                 if (body !== undefined) {
                     resolve(body);
                 }
+            });
+        });
+    }
+    static addContact(authToken, email) {
+        const defaultErrorMessage = "연락처를 추가하지 못했습니다.";
+
+        function checkAddContactResponseError(status) {
+            if (status === 409) {
+                return new Error("이미 연락처에 있는 이메일입니다.");
+            } else if (status === 406) {
+                return new Error("연락처로 등록할 수 없는 이메일입니다.");
+            } else if (status === 404) {
+                return new Error("없는 사용자입니다.");
+            } else {
+                return new Error(defaultErrorMessage);
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            HttpClient.fetchServer('users/contacts', {
+                method: 'POST',
+                headers: HttpClient.getAuthHeaders(authToken),
+                body: {
+                    email,
+                },
+            }).then((response) => {
+                if (response.status >= 200 && response.status < 300) {
+                    return response.json();
+                } else {
+                    reject(checkAddContactResponseError(response.status));
+                }
+            }).then((body) => {
+                if (body !== undefined) {
+                    resolve(body);
+                }
+            }).catch((error) => {
+                console.log(error);
+                reject(new Error(defaultErrorMessage));
             });
         });
     }

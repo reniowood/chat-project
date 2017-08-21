@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import FCM, { FCMEvent } from 'react-native-fcm';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
