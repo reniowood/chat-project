@@ -1,4 +1,3 @@
-import base64 from 'base-64';
 import Realm from 'realm';
 import PasswordNotConfirmedError from '../errors/PasswordNotConfirmedError';
 import FCM from 'react-native-fcm';
@@ -55,7 +54,7 @@ export default class UserService {
         return new Promise((resolve, reject) => {
             HttpClient.fetchServer('token', {
                 method: 'GET',
-                headers: getBasicAuthHeaders(email, password),
+                headers: HttpClient.getBasicAuthHeaders(email, password),
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
                     return response.json();

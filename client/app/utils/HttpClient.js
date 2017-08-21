@@ -1,3 +1,4 @@
+import base64 from 'base-64';
 import Config from '../config.json';
 
 export default class HttpClient {
