@@ -47,9 +47,10 @@ export default class Login extends React.Component {
     }
 
     onPressRegisterButton() {
-        const { navigate } = this.props.navigation;
-
-        navigate('Register');
+        this.props.navigator.push({
+            screen: 'com.client.Register',
+            passProps: {},
+        });
     }
 
     render() {

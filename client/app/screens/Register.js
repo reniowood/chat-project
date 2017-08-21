@@ -20,13 +20,13 @@ export default class Register extends React.Component {
     }
 
     onPressRegisterButton() {
-        const { navigate } = this.props.navigation;
-
         UserService.register(this.state.email, this.state.name, this.state.password, this.state.confirmPassword)
         .then(() => {
             Alert.alert('등록', '등록 완료');
             Keyboard.dismiss();
-            navigate('Login');
+            this.props.navigator.pop({
+                animated: false,
+            });
         })
         .catch((error) => {
             Alert.alert('등록', error.message);
