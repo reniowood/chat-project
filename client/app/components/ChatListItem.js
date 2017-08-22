@@ -4,13 +4,14 @@ import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 export default class ChatListItem extends React.Component {
     render() {
         const item = this.props.item;
+        console.log(item.last_message);
 
         return (
             <View>
                 <TouchableHighlight onPress={this.props.onPressChatListItem}>
                     <View style={styles.item}>
                         <Text style={styles.subject}>{item.name}</Text>
-                        <Text>{item.lastMsg}</Text>
+                        <Text>{item.last_message}</Text>
                     </View>
                 </TouchableHighlight>
             </View>
