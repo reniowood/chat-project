@@ -58,7 +58,7 @@ function pushByFCM(fcmToken, message) {
         json: true,
         body: {
             notification: {
-                title: "메세지가 도착했습니다",
+                title: message.chat_name,
                 body: message.msg.msg,
                 tag: `c:${message.id}`,
             },
