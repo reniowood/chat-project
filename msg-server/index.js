@@ -60,6 +60,7 @@ function pushByFCM(fcmToken, message) {
             notification: {
                 title: "메세지가 도착했습니다",
                 body: message.msg.msg,
+                tag: `c:${message.id}`,
             },
             data: message,
             to: fcmToken,
