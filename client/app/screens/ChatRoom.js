@@ -84,6 +84,9 @@ export default class ChatRoom extends React.Component {
     send() {
         this.sendMessage();
         this._textInput.clear();
+        this.setState({
+            msg: '',
+        })
     }
 
     render() {
