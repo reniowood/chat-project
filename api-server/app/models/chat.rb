@@ -19,9 +19,14 @@ class Chat < ApplicationRecord
     end
 
     def last_message
-        message = JSON.parse(get_last_message_from_redis)
+        message = get_last_message_from_redis
+        if message
+            message = JSON.parse(message)
 
-        return message['msg']['msg'] if message
+            return message['msg']['msg'] if message
+        else
+            return ''
+        end
     end
 
     private
