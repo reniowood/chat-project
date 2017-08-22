@@ -31,6 +31,19 @@ export default class ChatRoom extends React.Component {
         };
     }
 
+    initMessages(messages) {
+        messages.reverse();
+        
+        this.setState({
+            data: messages.map((message) => {
+                this.lastKey += 1;
+                return Object.assign(message.msg, {
+                    key: this.lastKey
+                });
+            }),
+        });
+    }
+
     componentDidMount() {
         this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
             console.log('notification: ' + JSON.stringify(notification));
@@ -42,18 +55,9 @@ export default class ChatRoom extends React.Component {
                 ],
             })
         });
-        ChatService.getChat(this.props.token, this.props.chatId)
-        .then((data) => {
-            data.messages.reverse();
-            
-            this.setState({
-                data: data.messages.map((message) => {
-                    this.lastKey += 1;
-                    return Object.assign(message.msg, {
-                        key: this.lastKey
-                    });
-                }),
-            });
+
+        ChatService.getChat(this.props.token, this.props.chatId).then(({chat, messages}) => {
+            this.initMessages(messages);
         });
     }
 

@@ -2,13 +2,10 @@ import React from 'react';
 import { View, FlatList, Text, Button, StyleSheet } from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Color from '../styles/Color';
+import ChatService from '../services/ChatService';
 import ChatListItem from '../components/ChatListItem';
 
 export default class ChatList extends React.Component {
-    static navigationOptions = {
-        title: 'Chats',
-    };
-
     onPressChatListItem(item) {
         this.props.navigator.push({
             screen: 'com.client.ChatRoom',
@@ -16,7 +13,6 @@ export default class ChatList extends React.Component {
             passProps: {
                 token: this.props.token,
                 chatId: item.id,
-                name: item.name
             },
         });
     }

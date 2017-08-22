@@ -11,7 +11,35 @@ export default class Splash extends React.Component {
             UserService.updateFCMToken(user.authToken);
         });
 
+        this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
+            if (notification.opened_from_tray) {
+                if (notification.id) {
+                    const user = UserService.getLastUser();
+                    const chatId = parseInt(notification.id);
+            
+                    if (user) {
+                        const authToken = user.authToken;
+
+                        this.props.navigator.push({
+                            screen: 'com.client.ChatRoom',
+                            title: notification.chat_name,
+                            passProps: {
+                                token: authToken,
+                                chatId,
+                            }
+                        });
+                    } else {
+                        this.props.navigator.resetTo({
+                            screen: 'com.client.Login',
+                            title: 'Login',
+                        });
+                    }
+                }
+            }
+        });
+
         const user = UserService.getLastUser();
+        
         if (user) {
             const authToken = user.authToken;
 
