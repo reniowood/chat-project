@@ -18,6 +18,12 @@ class Chat < ApplicationRecord
         get_messages_from_redis(user_id)
     end
 
+    def last_message
+        message = JSON.parse(get_last_message_from_redis)
+
+        return message['msg']['msg'] if message
+    end
+
     private
 
     def send_message_to_mq(sender_id, msg)
@@ -31,6 +37,21 @@ class Chat < ApplicationRecord
         channel.default_exchange.publish(msg.to_json, routing_key: queue.name)
 
         connection.close
+    end
+    
+    def get_last_message_from_redis
+        begin
+            redis = Redis.new(host: Rails.configuration.redis['host'], port: Rails.configuration.redis['port'])
+
+            result = redis.lrange("c:#{self.id}", 0, 0)
+            if result
+                return result[0]
+            else
+                return nil
+            end
+        rescue Exception => e
+            p e.message
+        end
     end
 
     def get_messages_from_redis(user_id)

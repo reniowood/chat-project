@@ -1,6 +1,6 @@
 class ChatsController < ApplicationController
     def index
-        render json: { chats: user.chats }
+        render json: { chats: user.chats }, methods: :last_message
     end
     
     def create
