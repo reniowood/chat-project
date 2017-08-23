@@ -1,5 +1,4 @@
 import Realm from 'realm';
-import PasswordNotConfirmedError from '../errors/PasswordNotConfirmedError';
 import FCM from 'react-native-fcm';
 import HttpClient from '../utils/HttpClient';
 import User from '../models/User';
@@ -28,7 +27,7 @@ export default class UserService {
 
         return new Promise((resolve, reject) => {
             if (password !== confirmPassword) {
-                reject(new PasswordNotConfirmedError("패스워드가 맞지 않습니다."));
+                reject(new Error("패스워드가 맞지 않습니다."));
             }
 
             HttpClient.fetchServer('users', {
