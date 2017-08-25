@@ -1,63 +1,33 @@
 import React from 'react';
 import { View, FlatList, TextInput, Button, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
 import ReversedFlatList from 'react-native-reversed-flat-list';
 import FCM, { FCMEvent } from 'react-native-fcm';
+import { addMessage } from '../actions/chats';
 import ChatService from '../services/ChatService';
 import ChatBubble from '../components/ChatBubble';
 import Color from '../styles/Color';
 
-export default class ChatRoom extends React.Component {
-    // state.data[0] = {key: 0, date: new Date('2017-06-01T10:00:00+09:00'), senderId: 1, msg: '안녕 뭐하구지내'}
-    constructor() {
-        super(); 
-        
-        this.state = {
-            data: [],
-        };
-        this.lastKey = -1;
-    }
+class ChatRoom extends React.Component {
+    // message = {key: 0, date: new Date('2017-06-01T10:00:00+09:00'), senderId: 1, msg: '안녕 뭐하구지내'}
 
     createMessageFromPushNotification(notification) {
-        this.lastKey += 1;
-
         const message = JSON.parse(notification.msg);
-        console.log(JSON.stringify(message));
 
         return {
-            key: this.lastKey,
-            sentByMe: false,
+            senderId: message.senderId,
             date: new Date(message.date),
             msg: message.msg,
         };
     }
 
-    initMessages(messages) {
-        messages.reverse();
-        
-        this.setState({
-            data: messages.map((message) => {
-                this.lastKey += 1;
-                return Object.assign(message.msg, {
-                    key: this.lastKey
-                });
-            }),
-        });
-    }
-
     componentDidMount() {
+        const { addMessage, chat } = this.props;
+        
         this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
-            console.log('notification: ' + JSON.stringify(notification));
+            const message = this.createMessageFromPushNotification(notification);
 
-            this.setState({
-                data: [
-                    ...this.state.data,
-                    this.createMessageFromPushNotification(notification),
-                ],
-            })
-        });
-
-        ChatService.getChat(this.props.token, this.props.chatId).then(({chat, messages}) => {
-            this.initMessages(messages);
+            addMessage(chat.id, message.senderId, message.date, message.msg);
         });
     }
 
@@ -66,23 +36,17 @@ export default class ChatRoom extends React.Component {
     }
 
     sendMessage() {
-        ChatService.sendMessage(this.props.token, this.props.chatId, this.state.msg)
+        const { user, chat } = this.props;
+
+        ChatService.sendMessage(user.authToken, chat.id, this.state.msg)
         .then((sentMessage) => {
-            this.lastKey += 1;
-            this.setState({
-                data: [
-                    ...this.state.data,
-                    Object.assign(sentMessage, {
-                        key: this.lastKey,
-                        sent_by_me: true,
-                    }),
-                ],
-            });
+            addMessage(chat.id, user.id, sentMessage.date, sentMessage.msg);
         });
     }
 
     send() {
         this.sendMessage();
+
         this._textInput.clear();
         this.setState({
             msg: '',
@@ -90,16 +54,18 @@ export default class ChatRoom extends React.Component {
     }
 
     render() {
+        const { user, chat } = this.props;
+
         return (
             <View style={styles.container}>
                 <View style={styles.chatBubbleView}>
                     <ReversedFlatList ref={(view) => this._scrollView = view}
-                        data={this.state.data}
+                        data={chat.messages}
                         renderItem={({item}) => (
                             <ChatBubble
                                 style={styles.chatBubble}
                                 key={item.key}
-                                sentByMe={item.sent_by_me}
+                                sentByMe={user.id === item.senderId}
                                 date={new Date(item.date)}
                             >
                                 {item.msg}
@@ -160,3 +126,20 @@ const styles = StyleSheet.create({
         height: 48,
     },
 });
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.user,
+        chat: state.chats.data[ownProps.chatId],
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addMessage: (chatId, senderId, date, message) => {
+            dispatch(addMessage(chatId, senderId, date, message));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChatRoom);

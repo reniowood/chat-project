@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, TextInput, Button, Alert, StyleSheet, Keyboard } from 'react-native';
+import { connect } from 'react-redux'
+import { addContact } from '../actions/contacts';
 import Color from '../styles/Color';
 import UserService from '../services/UserService';
 
-export default class AddContact extends React.Component {
+class AddContact extends React.Component {
     constructor() {
         super();
 
@@ -13,15 +15,17 @@ export default class AddContact extends React.Component {
     }
 
     addContact() {
-        UserService.addContact(this.props.token, this.state.email)
-        .then(() => {
+        const { navigator, user, addContact } = this.props;
+
+        UserService.addContact(user.authToken, this.state.email).then(({id, name}) => {
+            addContact(id, name);
+
             Alert.alert('연락처 추가', '연락처 추가 완료');
             Keyboard.dismiss();
-            this.props.navigator.pop({
+            navigator.pop({
                 animated: false,
             });
-        })
-        .catch((error) => {
+        }).catch((error) => {
             Alert.alert('연락처 추가', error.message);
         });
     }
@@ -67,3 +71,19 @@ const styles = StyleSheet.create({
         height: 50,
     },
 });
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.user,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addContact: (id, name) => {
+            dispatch(addContact(id, name));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddContact);

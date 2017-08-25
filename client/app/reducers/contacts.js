@@ -1,10 +1,9 @@
 import {
     ADD_CONTACT
 } from '../actions/contacts';
+import { initialState } from '../stores/state';
 
-const defaultState = {
-    contacts: [],
-};
+const defaultState = initialState.contacts;
 
 export default function contacts(state = defaultState, action) {
     switch (action.type) {

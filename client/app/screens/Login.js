@@ -1,43 +1,64 @@
 import React from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Keyboard } from 'react-native';
+import { connect } from 'react-redux';
+import { loginUser } from '../actions/user';
+import { addContact } from '../actions/contacts';
+import { addChat } from '../actions/chats';
 import Color from '../styles/Color';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
-export default class Login extends React.Component {
-    static navigationOptions = {
-        title: 'Login',
-    };
-
+class Login extends React.Component {
     constructor() {
         super();
 
-        const user = UserService.getLastUser();
         this.state = {
-            email: user ? user.email : '',
+            email: '',
             password: '',
         };
     }
 
+    componentWillMount() {
+        const { user } = this.props;
+        
+        this.setState({
+            email: user.email,
+        });
+    }
+
+    updateState(authToken) {
+        UserService.getContacts(authToken).then((contacts) => {
+            console.log(contacts);
+            contacts.map((contact) => addContact(contact.id, contact.name));
+        });
+        ChatService.getChatList(authToken).then((chats) => {
+            console.log(chats);
+            chats.map((chat) => {
+                ChatService.getChat(authToken, chat.id).then(({chat, userId, messages}) => {
+                    addChat(chat.id, chat.name, userId, messages);
+                });
+            });
+        });
+    }
+
     logIn() {
-        UserService.getAuthToken(this.state.email, this.state.password)
-        .then(({authToken}) => {
-            UserService.saveAuthToken(this.state.email, authToken);
+        const { navigator, loginUser } = this.props;
+        const { email, password } = this.state;
+
+        UserService.getAuthToken(email, password).then(({authToken}) => {
+            loginUser(email, authToken);
+
             UserService.updateFCMToken(authToken).catch((error) => {
                 Alert.alert('푸시 등록', error.message);
             });
-            ChatService.getChatList(authToken).then((chatList) => {
-                Keyboard.dismiss();
-                this.props.navigator.resetTo({
-                    screen: 'com.client.ChatList',
-                    passProps: {
-                        chatList,
-                        token: authToken
-                    },
-                });
+
+            this.updateState(authToken);
+            
+            Keyboard.dismiss();
+            navigator.resetTo({
+                screen: 'com.client.ChatList',
             });
-        })
-        .catch((error) => {
+        }).catch((error) => {
             Alert.alert('로그인', error.message);
         });
     }
@@ -103,3 +124,25 @@ const styles = StyleSheet.create({
         height: 50,
     },
 });
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.user,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        loginUser: (email, authToken) => {
+            dispatch(loginUser(email, authToken));
+        },
+        addContact: (id, name) => {
+            dispatch(addContact(id, name));
+        },
+        addChat: (id, name, userId, messages) => {
+            dispatch(addChat(id, name, userId, messages));
+        },
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

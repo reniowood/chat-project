@@ -3,16 +3,11 @@ import {
     LOGIN_USER,
     LOGOUT_USER,
 } from '../actions/user';
+import { initialState } from '../stores/state';
 
-const defaultUser = {
-    email: '',
-    name: '',
-    authToken: null,
-    lastLoggedIn: null,
-    isLoggedIn: false,
-};
+const defaultState = initialState.user;
 
-export default function user(state = defaultUser, action) {
+export default function user(state = defaultState, action) {
     switch (action.type) {
         case REGISTER_USER:
             return Object.assign({}, state, {

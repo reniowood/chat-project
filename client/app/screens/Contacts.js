@@ -1,88 +1,57 @@
 import React from 'react';
 import { View, FlatList, Text, StyleSheet } from 'react-native';
+import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
+import { addChat } from '../actions/chats';
 import Color from '../styles/Color';
 import UserListItem from '../components/UserListItem';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
-export default class Contacts extends React.Component {
-    constructor(props) {
-        super(props);
-    
-        this.state = {
-            contacts: [],
-        }
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
-    }
-
-    updateContacts() {
-        UserService.getContacts(this.props.token)
-        .then((contacts) => {
-            this.setState({
-                contacts: contacts.map((contact) => {
-                    return Object.assign(contact, {
-                        key: contact.id,
-                    })
-                }),
-            })
-        });
-    }
-
-    onNavigatorEvent(event) {
-        switch (event.id) {
-            case 'willAppear':
-                this.updateContacts();
-                break;
-            default:
-                break;
-        }
-    }
-
-    componentDidMount() {
-        this.updateContacts();
-    }
-
+class Contacts extends React.Component {
     closeContacts() {
-        this.props.navigator.pop({
+        const { navigator } = this.props;
+
+        navigator.pop({
             animated: false,
         });
     }
 
     openChatRoom(chatId, name) {
-        this.props.navigator.push({
+        const { navigator } = this.props;
+
+        navigator.push({
             screen: 'com.client.ChatRoom',
             title: name,
-            passProps: {
-                token: this.props.token,
-                chatId,
-                name
-            },
         });
     }
 
     onPressUserListItem(item) {
-        ChatService.createChat(this.props.token, item.id)
-        .then(({chatId, name}) => {
+        const { token, addChat } = this.props;
+
+        ChatService.createChat(token, item.id).then(({chatId, name}) => {
+            addChat(chatId, name, item.id, []);
+
             this.closeContacts();
             this.openChatRoom(chatId, name);
         });
     }
 
     onPressAddContactButton() {
-        this.props.navigator.push({
+        const { navigator } = this.props;
+
+        navigator.push({
             screen: 'com.client.AddContact',
-            passProps: {
-                token: this.props.token,
-            },
         })
     }
 
     render() {
+        const { contacts } = this.props;
+
         return (
             <View style={styles.container}>
                 <FlatList
-                    data={this.state.contacts}
+                    data={contacts}
                     renderItem={({item}) => <UserListItem item={item} onPressUserListItem={this.onPressUserListItem.bind(this, item)} />}
                 />
                 <ActionButton
@@ -100,3 +69,20 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 });
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.user,
+        contacts: state.contacts.order.map((id) => state.contacts.data[id]),
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addChat: (id, name, userId, messages) => {
+            dispatch(addChat(id, name, userId, messages));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Contacts);

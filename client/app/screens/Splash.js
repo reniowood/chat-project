@@ -1,35 +1,35 @@
 import React from 'react';
 import { View, Alert } from 'react-native';
+import { connect } from 'react-redux';
 import FCM, { FCMEvent } from 'react-native-fcm';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
-export default class Splash extends React.Component {
+class Splash extends React.Component {
     componentDidMount() {
+        const { navigator, user } = this.props;
+
         this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (fcmToken) => {
-            const user = UserService.getLastUser();
-            UserService.updateFCMToken(user.authToken);
+            if (user && user.authToken !== null) {
+                UserService.updateFCMToken(user.authToken);
+            }
         });
 
         this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
             if (notification.opened_from_tray) {
                 if (notification.id) {
-                    const user = UserService.getLastUser();
                     const chatId = parseInt(notification.id);
             
                     if (user) {
-                        const authToken = user.authToken;
-
-                        this.props.navigator.push({
+                        navigator.push({
                             screen: 'com.client.ChatRoom',
                             title: notification.chat_name,
                             passProps: {
-                                token: authToken,
                                 chatId,
                             }
                         });
                     } else {
-                        this.props.navigator.resetTo({
+                        navigator.resetTo({
                             screen: 'com.client.Login',
                             title: 'Login',
                         });
@@ -37,27 +37,18 @@ export default class Splash extends React.Component {
                 }
             }
         });
-
-        const user = UserService.getLastUser();
         
-        if (user) {
-            const authToken = user.authToken;
-
-            UserService.updateFCMToken(authToken).catch((error) => {
-                Alert.alert('푸시 등록', error.message);
-            });
-            ChatService.getChatList(authToken).then((chatList) => {
-                this.props.navigator.resetTo({
+        if (user && user.authToken !== null) {
+            UserService.updateFCMToken(user.authToken).then(() => {
+                navigator.resetTo({
                     screen: 'com.client.ChatList',
                     title: 'ChatList',
-                    passProps: {
-                        chatList,
-                        token: authToken
-                    }
                 });
+            }).catch((error) => {
+                Alert.alert('푸시 등록', error.message);
             });
         } else {
-            this.props.navigator.resetTo({
+            navigator.resetTo({
                 screen: 'com.client.Login',
                 title: 'Login',
             });
@@ -73,3 +64,15 @@ export default class Splash extends React.Component {
         );
     }
 }
+
+const mapStateToProps = (state, ownProps) => {
+    return {
+        user: state.user,
+    };
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Splash);

@@ -1,9 +1,6 @@
-import Realm from 'realm';
 import FCM from 'react-native-fcm';
 import HttpClient from '../utils/HttpClient';
 import User from '../models/User';
-
-let realm = new Realm({ schema: [User] });
 
 export default class UserService {
     static register(email, name, password, confirmPassword) {
@@ -70,32 +67,6 @@ export default class UserService {
                 }
             });
         });
-    }
-    static getLastUser() {
-        const users = realm.objects('User').sorted('lastLoggedIn');
-        
-        return users[users.length - 1];
-    }
-    static saveAuthToken(email, authToken) {
-        const users = realm.objects('User').filtered(`email = "${email}"`);
-        
-        if (users.length == 0) {
-            realm.write(() => {
-                const user = realm.create('User', {
-                    email,
-                    authToken,
-                    lastLoggedIn: new Date(),
-                    isLoggedIn: true,
-                });
-            });
-        } else {
-            const user = users[0];
-            realm.write(() => {
-                user.authToken = authToken;
-                user.lastLoggedIn = new Date();
-                user.isLoggedIn = true;
-            });
-        }
     }
     static updateFCMToken(authToken) {
         const defaultErrorMessage = "푸시 등록에 실패했습니다.";

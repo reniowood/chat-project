@@ -1,4 +1,6 @@
 import { createStore } from 'redux';
-import ChatProject from './reducers/index';
+import ChatProject from '../reducers/index';
 
-let store = createStore(ChatProject);
+const store = createStore(ChatProject);
+
+export default store;

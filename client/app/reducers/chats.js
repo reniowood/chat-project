@@ -2,42 +2,41 @@ import {
     ADD_CHAT,
     ADD_MESSAGE,
 } from '../actions/chats';
+import { initialState } from '../stores/state';
 
-const defaultChats = {
-    chats: [],
-};
+const defaultState = initialState.chats;
 
-export default function chats(state = defaultChats, action) {
+export default function chats(state = defaultState, action) {
     switch (action.type) {
         case ADD_CHAT:
             return Object.assign({}, state, {
-                chats: [
-                    ...state.chats,
-                    {
+                data: Object.assign({}, state.data, {
+                    [action.id]: {
                         id: action.id,
                         name: action.name,
                         userId: action.userId,
                         messages: action.messages,
                     }
+                }),
+                order: [
+                    action.id,
+                    ...state.order,
                 ],
             });
         case ADD_MESSAGE:
             return Object.assign({}, state, {
-                chats: state.chats.map((chat) => {
-                    if (chat.id === action.chatId) {
-                        return Object.assign({}, chat, {
-                            messages: [
-                                ...chat.messages,
-                                {
-                                    senderId: action.senderId,
-                                    date: new Date(),
-                                    message: action.message,
-                                },
-                            ],
-                        })
-                    } else {
-                        return chat;
-                    }
+                data: Object.assign({}, state.data, {
+                    [action.chatId]: Object.assign({}, state.data[action.chatId], {
+                        messages: [
+                            ...state.data[action.chatId].messages,
+                            {
+                                key: state.data[action.chatId].messages.length,
+                                senderId: action.senderId,
+                                date: action.date,
+                                message: action.message,
+                            },
+                        ]
+                    })
                 }),
             });
         default:

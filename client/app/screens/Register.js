@@ -1,13 +1,11 @@
 import React from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Keyboard } from 'react-native';
+import { connect } from 'react-redux';
+import { registerUser } from '../actions/user';
 import Color from '../styles/Color';
 import UserService from '../services/UserService';
 
-export default class Register extends React.Component {
-    static navigationOptions = {
-        title: 'Register',
-    };
-
+class Register extends React.Component {
     constructor() {
         super();
 
@@ -20,11 +18,15 @@ export default class Register extends React.Component {
     }
 
     onPressRegisterButton() {
-        UserService.register(this.state.email, this.state.name, this.state.password, this.state.confirmPassword)
-        .then(() => {
+        const { navigator } = this.props;
+        const { email, name, password, confirmPassword } = this.state;
+
+        UserService.register(email, name, password, confirmPassword).then(() => {
+            registerUser(email);
+
             Alert.alert('등록', '등록 완료');
             Keyboard.dismiss();
-            this.props.navigator.pop({
+            navigator.pop({
                 animated: false,
             });
         })
@@ -88,3 +90,17 @@ const styles = StyleSheet.create({
         height: 50,
     },
 });
+
+const mapStateToProps = (state, ownProps) => {
+    return {};
+};
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        registerUser: (email) => {
+            dispatch(registerUser(email));
+        }
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
