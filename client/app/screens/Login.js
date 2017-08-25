@@ -3,7 +3,7 @@ import { View, TextInput, Button, StyleSheet, Alert, Keyboard } from 'react-nati
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/user';
 import { addContact } from '../actions/contacts';
-import { addChat } from '../actions/chats';
+import { addChat, addMessage } from '../actions/chats';
 import Color from '../styles/Color';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
@@ -27,7 +27,7 @@ class Login extends React.Component {
     }
 
     updateState(authToken) {
-        const { addContact, addChat } = this.props;
+        const { addContact, addChat, addMessage } = this.props;
 
         return new Promise((resolve, reject) => {
             UserService.getContacts(authToken).then((contacts) => {
@@ -35,7 +35,11 @@ class Login extends React.Component {
     
                 ChatService.getChatList(authToken).then((chats) => {
                     chats.map(({id, name, user_ids, messages}) => {
-                        addChat(id, name, user_ids, messages);
+                        addChat(id, name, user_ids);
+                        
+                        messages.map(({id, sender_id, msg}) => {
+                            addMessage(id, sender_id, msg.date, msg.msg);
+                        });
                     });
 
                     resolve();
@@ -142,8 +146,11 @@ const mapDispatchToProps = (dispatch) => {
         addContact: (id, name) => {
             dispatch(addContact(id, name));
         },
-        addChat: (id, name, userIds, messages) => {
-            dispatch(addChat(id, name, userIds, messages));
+        addChat: (id, name, userIds) => {
+            dispatch(addChat(id, name, userIds));
+        },
+        addMessage: (chatId, senderId, date, message) => {
+            dispatch(addMessage(chatId, senderId, date, message));
         },
     };
 }

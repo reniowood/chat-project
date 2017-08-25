@@ -15,7 +15,7 @@ export default function chats(state = defaultState, action) {
                         id: action.id,
                         name: action.name,
                         userIds: action.userIds,
-                        messages: action.messages,
+                        messages: [],
                     }
                 }),
                 order: [
@@ -37,7 +37,7 @@ export default function chats(state = defaultState, action) {
                             },
                         ]
                     })
-                }),
+                })
             });
         default:
             return state;

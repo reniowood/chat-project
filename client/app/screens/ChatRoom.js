@@ -63,6 +63,8 @@ class ChatRoom extends React.Component {
     render() {
         const { user, chat } = this.props;
 
+        console.log(chat);
+
         return (
             <View style={styles.container}>
                 <View style={styles.chatBubbleView}>
@@ -75,7 +77,7 @@ class ChatRoom extends React.Component {
                                 sentByMe={user.id === item.senderId}
                                 date={new Date(item.date)}
                             >
-                                {item.msg}
+                                {item.message}
                             </ChatBubble>
                         )}
                     />
