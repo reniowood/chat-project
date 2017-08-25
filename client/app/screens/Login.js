@@ -27,6 +27,8 @@ class Login extends React.Component {
     }
 
     updateState(authToken) {
+        const { addContact, addChat } = this.props;
+
         return new Promise((resolve, reject) => {
             UserService.getContacts(authToken).then((contacts) => {
                 contacts.map((contact) => addContact(contact.id, contact.name));
