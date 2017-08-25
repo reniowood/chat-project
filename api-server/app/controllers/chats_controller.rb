@@ -1,6 +1,6 @@
 class ChatsController < ApplicationController
     def index
-        render json: { chats: user.chats }, methods: :last_message
+        render json: user.chats, only: [:id, :name], methods: [:user_ids, :messages, :last_message]
     end
     
     def create
@@ -28,13 +28,8 @@ class ChatsController < ApplicationController
     
     def show
         chat = Chat.find_by_id(params[:id])
-        user_ids = chat.users.map { |user| user.id }
-        messages = chat.get_messages(user.id)
-        render json: {
-            chat: chat.to_json(only: [:id, :name]),
-            user_ids: user_ids,
-            messages: messages
-        }
+
+        render json: chat
     end
     
     def update
