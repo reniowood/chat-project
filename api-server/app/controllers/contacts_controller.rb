@@ -11,7 +11,7 @@ class ContactsController < ApplicationController
             else
                 contact = Contact.create(owner_id: user.id, user_id: contact_user.id)
                 if contact && contact.valid?
-                    render json: user.users
+                    render json: contact_user
                 elsif contact.has_duplicate_contact?
                     head :conflict
                 else
