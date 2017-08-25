@@ -14,7 +14,7 @@ export default function chats(state = defaultState, action) {
                     [action.id]: {
                         id: action.id,
                         name: action.name,
-                        userId: action.userId,
+                        userIds: action.userIds,
                         messages: action.messages,
                     }
                 }),

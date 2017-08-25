@@ -29,8 +29,8 @@ class Contacts extends React.Component {
     onPressUserListItem(item) {
         const { token, addChat } = this.props;
 
-        ChatService.createChat(token, item.id).then(({chatId, name}) => {
-            addChat(chatId, name, item.id, []);
+        ChatService.createChat(token, [item.id]).then(({chatId, name}) => {
+            addChat(chatId, name, [user.id, item.id], []);
 
             this.closeContacts();
             this.openChatRoom(chatId, name);
@@ -79,8 +79,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        addChat: (id, name, userId, messages) => {
-            dispatch(addChat(id, name, userId, messages));
+        addChat: (id, name, userIds, messages) => {
+            dispatch(addChat(id, name, userIds, messages));
         }
     };
 }

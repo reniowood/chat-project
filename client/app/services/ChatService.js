@@ -14,16 +14,16 @@ export default class ChatService {
                 } else {
                     reject(new Error("채팅 목록을 가져오는 데 실패하였습니다."));
                 }
-            }).then((body) => resolve(body.chats));
+            }).then((body) => resolve(body));
         });
     }
-    static createChat(authToken, contactId) {
+    static createChat(authToken, userIds) {
         return new Promise((resolve, reject) => {
             HttpClient.fetchServer('chats', {
                 method: 'POST',
                 headers: HttpClient.getAuthHeaders(authToken),
                 body: {
-                    user_ids: [contactId],
+                    user_ids: userIds,
                 }
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {

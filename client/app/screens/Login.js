@@ -27,15 +27,16 @@ class Login extends React.Component {
     }
 
     updateState(authToken) {
-        UserService.getContacts(authToken).then((contacts) => {
-            console.log(contacts);
-            contacts.map((contact) => addContact(contact.id, contact.name));
-        });
-        ChatService.getChatList(authToken).then((chats) => {
-            console.log(chats);
-            chats.map((chat) => {
-                ChatService.getChat(authToken, chat.id).then(({chat, userId, messages}) => {
-                    addChat(chat.id, chat.name, userId, messages);
+        return new Promise((resolve, reject) => {
+            UserService.getContacts(authToken).then((contacts) => {
+                contacts.map((contact) => addContact(contact.id, contact.name));
+    
+                ChatService.getChatList(authToken).then((chats) => {
+                    chats.map(({id, name, user_ids, messages}) => {
+                        addChat(id, name, user_ids, messages);
+                    });
+
+                    resolve();
                 });
             });
         });
@@ -52,11 +53,11 @@ class Login extends React.Component {
                 Alert.alert('푸시 등록', error.message);
             });
 
-            this.updateState(authToken);
-            
-            Keyboard.dismiss();
-            navigator.resetTo({
-                screen: 'com.client.ChatList',
+            this.updateState(authToken).then(() => {
+                Keyboard.dismiss();
+                navigator.resetTo({
+                    screen: 'com.client.ChatList',
+                });
             });
         }).catch((error) => {
             Alert.alert('로그인', error.message);
@@ -139,8 +140,8 @@ const mapDispatchToProps = (dispatch) => {
         addContact: (id, name) => {
             dispatch(addContact(id, name));
         },
-        addChat: (id, name, userId, messages) => {
-            dispatch(addChat(id, name, userId, messages));
+        addChat: (id, name, userIds, messages) => {
+            dispatch(addChat(id, name, userIds, messages));
         },
     };
 }
