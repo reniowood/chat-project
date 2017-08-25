@@ -10,6 +10,13 @@ import Color from '../styles/Color';
 
 class ChatRoom extends React.Component {
     // message = {key: 0, date: new Date('2017-06-01T10:00:00+09:00'), senderId: 1, msg: '안녕 뭐하구지내'}
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            msg: '',
+        };
+    }
 
     createMessageFromPushNotification(notification) {
         const message = JSON.parse(notification.msg);
