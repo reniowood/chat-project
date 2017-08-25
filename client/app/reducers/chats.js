@@ -28,13 +28,13 @@ export default function chats(state = defaultState, action) {
                 data: Object.assign({}, state.data, {
                     [action.chatId]: Object.assign({}, state.data[action.chatId], {
                         messages: [
-                            ...state.data[action.chatId].messages,
                             {
                                 key: state.data[action.chatId].messages.length,
                                 senderId: action.senderId,
                                 date: action.date,
                                 message: action.message,
                             },
+                            ...state.data[action.chatId].messages,
                         ]
                     })
                 })
