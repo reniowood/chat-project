@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        chats: state.chats.order.map((id) => state.chats.data[id]),
+        chats: state.chats.chats.allIds.map((id) => state.chats.chats.byId[id]),
     };
 };
 

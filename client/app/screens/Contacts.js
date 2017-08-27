@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = (state, ownProps) => {
     return {
         user: state.user,
-        contacts: state.contacts.order.map((id) => state.contacts.data[id]),
+        contacts: state.contacts.allIds.map((id) => state.contacts.byId[id]),
     };
 };
 

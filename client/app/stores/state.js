@@ -7,11 +7,17 @@ export const initialState = {
         isLoggedIn: false,
     },
     chats: {
-        data: {},
-        order: [],
+        chats: {
+            byId: {},
+            allIds: [],
+        },
+        messages: {
+            byId: {},
+            allIds: [],
+        },
     },
     contacts: {
-        data: {},
-        order: [],
+        byId: {},
+        allIds: [],
     },
 };

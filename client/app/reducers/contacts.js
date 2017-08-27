@@ -9,14 +9,14 @@ export default function contacts(state = defaultState, action) {
     switch (action.type) {
         case ADD_CONTACT:
             return Object.assign({}, state, {
-                data: Object.assign({}, state.data, {
+                byId: Object.assign({}, state.byId, {
                     [action.id]: {
                         id: action.id,
                         name: action.name,
                     }
                 }),
-                order: [
-                    ...state.order,
+                allIds: [
+                    ...state.allIds,
                     action.id,
                 ]
             });

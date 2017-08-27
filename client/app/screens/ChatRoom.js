@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ReversedFlatList from 'react-native-reversed-flat-list';
 import FCM, { FCMEvent } from 'react-native-fcm';
@@ -45,8 +45,7 @@ class ChatRoom extends React.Component {
     sendMessage() {
         const { user, chat } = this.props;
 
-        ChatService.sendMessage(user.authToken, chat.id, this.state.msg)
-        .then((sentMessage) => {
+        ChatService.sendMessage(user.authToken, chat.id, this.state.msg).then((sentMessage) => {
             addMessage(chat.id, user.id, sentMessage.date, sentMessage.msg);
         });
     }
@@ -61,15 +60,15 @@ class ChatRoom extends React.Component {
     }
 
     render() {
-        const { user, chat } = this.props;
+        const { user, chat, messages } = this.props;
 
-        console.log(chat);
+        console.log(messages);
 
         return (
             <View style={styles.container}>
                 <View style={styles.chatBubbleView}>
-                    <ReversedFlatList ref={(view) => this._scrollView = view}
-                        data={chat.messages}
+                    <ReversedFlatList
+                        data={messages}
                         renderItem={({item}) => (
                             <ChatBubble
                                 style={styles.chatBubble}
@@ -137,9 +136,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = (state, ownProps) => {
+    const chat = state.chats.chats.byId[ownProps.chatId];
+    const messages = chat.messages.map((messageId) => state.chats.messages.byId[messageId]);
+
     return {
         user: state.user,
-        chat: state.chats.data[ownProps.chatId],
+        chat,
+        messages,
     };
 };
 

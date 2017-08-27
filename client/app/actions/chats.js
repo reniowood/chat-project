@@ -6,5 +6,5 @@ export function addChat(id, name, userIds) {
 }
 
 export function addMessage(chatId, senderId, date, message) {
-    return { type: ADD_MESSAGE, chatId, date, message };
+    return { type: ADD_MESSAGE, chatId, senderId, date, message };
 }
