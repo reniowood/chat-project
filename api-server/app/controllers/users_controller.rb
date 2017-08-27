@@ -4,7 +4,7 @@ class UsersController < ApplicationController
     def create
         user = User.create(name: params[:name], email: params[:email], password: params[:password])
         if user && user.valid?
-            head :ok
+            render json: { id: user.id }
         elsif user.has_invalid_email?
             render json: { field: :email }, status: :bad_request
         elsif user.has_duplicate_email?
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     end
 
     def show
-        render json: user, only: [:name, :email]
+        render json: user, only: [:id, :name, :email]
     end
 
     def update
