@@ -52,8 +52,8 @@ class Login extends React.Component {
         const { navigator, loginUser } = this.props;
         const { email, password } = this.state;
 
-        UserService.getAuthToken(email, password).then(({authToken}) => {
-            loginUser(email, authToken);
+        UserService.getAuthToken(email, password).then(({id, authToken}) => {
+            loginUser(id, email, authToken);
 
             UserService.updateFCMToken(authToken).catch((error) => {
                 Alert.alert('푸시 등록', error.message);
@@ -140,8 +140,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        loginUser: (email, authToken) => {
-            dispatch(loginUser(email, authToken));
+        loginUser: (id, email, authToken) => {
+            dispatch(loginUser(id, email, authToken));
         },
         addContact: (id, name) => {
             dispatch(addContact(id, name));

@@ -11,6 +11,7 @@ export default function user(state = defaultState, action) {
     switch (action.type) {
         case REGISTER_USER:
             return Object.assign({}, state, {
+                id: action.id,
                 email: action.email,
                 authToken: null,
                 lastLoggedIn: null,
@@ -18,6 +19,7 @@ export default function user(state = defaultState, action) {
             });
         case LOGIN_USER:
             return Object.assign({}, state, {
+                id: action.id,
                 email: action.email,
                 authToken: action.authToken,
                 lastLoggedIn: new Date(),

@@ -62,6 +62,7 @@ export default class UserService {
             }).then((body) => {
                 if (body !== undefined) {
                     resolve({
+                        id: body.id,
                         authToken: body.token,
                     });
                 }

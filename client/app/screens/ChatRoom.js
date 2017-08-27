@@ -62,8 +62,6 @@ class ChatRoom extends React.Component {
     render() {
         const { user, chat, messages } = this.props;
 
-        console.log(messages);
-
         return (
             <View style={styles.container}>
                 <View style={styles.chatBubbleView}>

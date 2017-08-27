@@ -21,8 +21,8 @@ class Register extends React.Component {
         const { navigator } = this.props;
         const { email, name, password, confirmPassword } = this.state;
 
-        UserService.register(email, name, password, confirmPassword).then(() => {
-            registerUser(email);
+        UserService.register(email, name, password, confirmPassword).then(({id}) => {
+            registerUser(id, email);
 
             Alert.alert('등록', '등록 완료');
             Keyboard.dismiss();
@@ -97,8 +97,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        registerUser: (email) => {
-            dispatch(registerUser(email));
+        registerUser: (id, email) => {
+            dispatch(registerUser(id, email));
         }
     };
 }
