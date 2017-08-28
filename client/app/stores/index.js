@@ -1,6 +1,14 @@
-import { createStore } from 'redux';
+import { AsyncStorage } from 'react-native';
+import { createStore, compose, applyMiddleware } from 'redux';
+import { persistStore, autoRehydrate } from 'redux-persist';
 import ChatProject from '../reducers/index';
 
-const store = createStore(ChatProject);
+export const store = createStore(
+    ChatProject,
+    undefined,
+    compose(
+        autoRehydrate()
+    )
+);
 
-export default store;
+export const persistor = persistStore(store, { storage: AsyncStorage });
