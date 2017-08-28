@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 export default class ChatListItem extends React.Component {
     render() {
         const item = this.props.item;
-        console.log(item.last_message);
 
         return (
             <View>

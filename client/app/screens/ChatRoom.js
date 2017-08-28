@@ -43,7 +43,7 @@ class ChatRoom extends React.Component {
     }
 
     sendMessage() {
-        const { user, chat } = this.props;
+        const { addMessage, user, chat } = this.props;
 
         ChatService.sendMessage(user.authToken, chat.id, this.state.msg).then((sentMessage) => {
             addMessage(chat.id, user.id, sentMessage.date, sentMessage.msg);
