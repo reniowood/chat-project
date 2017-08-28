@@ -59,6 +59,7 @@ class Login extends React.Component {
                 Keyboard.dismiss();
                 navigator.resetTo({
                     screen: 'com.client.ChatList',
+                    title: 'ChatList',
                 });
             });
         }).catch((error) => {
