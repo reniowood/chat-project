@@ -54,9 +54,20 @@ const styles = StyleSheet.create({
     },
 });
 
+const setLastMessages = (chats, messages) => {
+    chats.forEach((chat) => {
+        const lastMessageId = chat.messages[chat.messages.length - 1];
+        chat.lastMessage = messages[lastMessageId].message;
+    });
+};
+
 const mapStateToProps = (state, ownProps) => {
+    const chats = state.chats.chats.allIds.map((id) => state.chats.chats.byId[id]);
+
+    setLastMessages(chats, state.chats.messages.byId);
+
     return {
-        chats: state.chats.chats.allIds.map((id) => state.chats.chats.byId[id]),
+        chats,
     };
 };
 

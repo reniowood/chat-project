@@ -10,7 +10,7 @@ export default class ChatListItem extends React.Component {
                 <TouchableHighlight onPress={this.props.onPressChatListItem}>
                     <View style={styles.item}>
                         <Text style={styles.subject}>{item.name}</Text>
-                        <Text>{item.last_message}</Text>
+                        <Text>{item.lastMessage}</Text>
                     </View>
                 </TouchableHighlight>
             </View>
