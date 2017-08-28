@@ -52,6 +52,7 @@ class Contacts extends React.Component {
             <View style={styles.container}>
                 <FlatList
                     data={contacts}
+                    keyExtractor={item => item.id}
                     renderItem={({item}) => <UserListItem item={item} onPressUserListItem={this.onPressUserListItem.bind(this, item)} />}
                 />
                 <ActionButton
