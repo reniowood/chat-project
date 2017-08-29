@@ -136,6 +136,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state, ownProps) => {
     const chat = state.chats.chats.byId[ownProps.chatId];
+    if (chat === undefined) {
+        throw new Error(`채팅방이 존재하지 않습니다: ${ownProps.chatId}`);
+    }
     const messages = chat.messages.map((messageId) => state.chats.messages.byId[messageId]);
 
     return {
