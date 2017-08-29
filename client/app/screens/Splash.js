@@ -2,19 +2,32 @@ import React from 'react';
 import { View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import FCM, { FCMEvent } from 'react-native-fcm';
+import { persistor } from '../stores/index';
 import Screen from './Screen';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
 class Splash extends Screen {
-    componentDidMount() {
-        const { navigator, user } = this.props;
+    constructor(props) {
+        super(props);
+
+        this.addFCMRefreshTokenListener(props);
+        this.addFCMNotificationListener(props);
+        this.autoLogin(props);
+    }
+
+    addFCMRefreshTokenListener(props) {
+        const { user } = props;
 
         this.refreshTokenListener = FCM.on(FCMEvent.RefreshToken, (fcmToken) => {
             if (user && user.authToken !== null) {
                 UserService.updateFCMToken(user.authToken);
             }
         });
+    }
+
+    addFCMNotificationListener(props) {
+        const { navigator, user } = props;
 
         this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
             if (notification.opened_from_tray) {
@@ -32,13 +45,16 @@ class Splash extends Screen {
                     } else {
                         navigator.resetTo({
                             screen: 'com.client.Login',
-                            title: 'Login',
                         });
                     }
                 }
             }
         });
+    }
         
+    autoLogin(props) {
+        const { navigator, user } = props;
+
         if (user && user.authToken !== null) {
             UserService.updateFCMToken(user.authToken).then(() => {
                 navigator.resetTo({
@@ -51,13 +67,14 @@ class Splash extends Screen {
         } else {
             navigator.resetTo({
                 screen: 'com.client.Login',
-                title: 'Login',
             });
         }  
     }
+
     componentWillUnmount() {
         this.refreshTokenListener.remove();
     }
+
     render() {
         return (
             <View>

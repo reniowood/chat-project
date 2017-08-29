@@ -15,21 +15,17 @@ class Login extends Screen {
         navBarHidden: true,
     };
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
-        this.state = {
-            email: '',
-            password: '',
-        };
+        this.initState(props);
     }
 
-    componentWillMount() {
-        const { user } = this.props;
-        
-        this.setState({
-            email: user.email,
-        });
+    initState(props) {
+        this.state = {
+            email: props.user.email,
+            password: '',
+        };
     }
 
     updateState(authToken) {

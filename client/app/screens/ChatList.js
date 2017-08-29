@@ -21,7 +21,11 @@ class ChatList extends Screen {
     constructor(props) {
         super(props);
 
-        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+        this.addNavigationEventListener(props);
+    }
+
+    addNavigationEventListener(props) {
+        props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
     }
 
     onNavigatorEvent(event) {

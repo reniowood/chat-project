@@ -7,9 +7,13 @@ import Color from '../styles/Color';
 import UserService from '../services/UserService';
 
 class Register extends Screen {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
+        this.initState(props);
+    }
+
+    initState(props) {
         this.state = {
             email: '',
             name: '',

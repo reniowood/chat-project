@@ -14,9 +14,28 @@ class ChatRoom extends Screen {
     constructor(props) {
         super(props);
 
+        this.initState(props);
+        this.addFCMNotificationListener(props);
+    }
+    
+    componentWillUnmount() {
+        this.notificationListener.remove();
+    }
+
+    initState(props) {
         this.state = {
             msg: '',
         };
+    }
+
+    addFCMNotificationListener(props) {
+        const { addMessage, chat } = props;
+        
+        this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
+            const message = this.createMessageFromPushNotification(notification);
+
+            addMessage(chat.id, message.senderId, message.date, message.msg);
+        });
     }
 
     createMessageFromPushNotification(notification) {
@@ -27,20 +46,6 @@ class ChatRoom extends Screen {
             date: new Date(message.date),
             msg: message.msg,
         };
-    }
-
-    componentDidMount() {
-        const { addMessage, chat } = this.props;
-        
-        this.notificationListener = FCM.on(FCMEvent.Notification, (notification) => {
-            const message = this.createMessageFromPushNotification(notification);
-
-            addMessage(chat.id, message.senderId, message.date, message.msg);
-        });
-    }
-
-    componentWillUnmount() {
-        this.notificationListener.remove();
     }
 
     sendMessage() {
