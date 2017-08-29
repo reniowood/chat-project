@@ -2,10 +2,11 @@ import React from 'react';
 import { View, TextInput, Button, StyleSheet, Alert, Keyboard } from 'react-native';
 import { connect } from 'react-redux';
 import { registerUser } from '../actions/user';
+import Screen from './Screen';
 import Color from '../styles/Color';
 import UserService from '../services/UserService';
 
-class Register extends React.Component {
+class Register extends Screen {
     constructor() {
         super();
 

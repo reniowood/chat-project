@@ -2,10 +2,11 @@ import React from 'react';
 import { View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import FCM, { FCMEvent } from 'react-native-fcm';
+import Screen from './Screen';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
-class Splash extends React.Component {
+class Splash extends Screen {
     componentDidMount() {
         const { navigator, user } = this.props;
 

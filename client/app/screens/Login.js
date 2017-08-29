@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 import { loginUser } from '../actions/user';
 import { addContact } from '../actions/contacts';
 import { addChat } from '../actions/chats';
+import Screen from './Screen';
 import Color from '../styles/Color';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
-class Login extends React.Component {
+class Login extends Screen {
     constructor() {
         super();
 

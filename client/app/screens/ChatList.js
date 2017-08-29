@@ -2,11 +2,12 @@ import React from 'react';
 import { View, FlatList, Text, Button, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
+import Screen from './Screen';
 import Color from '../styles/Color';
 import ChatService from '../services/ChatService';
 import ChatListItem from '../components/ChatListItem';
 
-class ChatList extends React.Component {
+class ChatList extends Screen {
     onPressChatListItem(item) {
         const { navigator } = this.props;
 

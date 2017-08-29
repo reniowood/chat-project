@@ -3,12 +3,13 @@ import { View, FlatList, Text, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
 import { addChat } from '../actions/chats';
+import Screen from './Screen';
 import Color from '../styles/Color';
 import UserListItem from '../components/UserListItem';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
-class Contacts extends React.Component {
+class Contacts extends Screen {
     closeContacts() {
         const { navigator } = this.props;
 
