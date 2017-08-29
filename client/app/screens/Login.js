@@ -10,6 +10,11 @@ import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
 class Login extends Screen {
+    static navigatorStyle = {
+        ...Login.navigatorStyle,
+        navBarHidden: true,
+    };
+
     constructor() {
         super();
 
