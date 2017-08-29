@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 
 export default class TextListItem extends React.Component {
     render() {
-        const { title } = this.props;
+        const { title, onPress } = this.props;
 
         return (
             <View>
-                <TouchableHighlight onPress={this.props.onPressTextListItem}>
+                <TouchableHighlight onPress={onPress}>
                     <View style={styles.item}>
                         <Text style={styles.title}>{title}</Text>
                     </View>

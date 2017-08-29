@@ -80,7 +80,7 @@ class ChatList extends Screen {
                         <TwoLineListItem
                             title={item.name}
                             subtitle={item.lastMessage}
-                            onPressListItem={this.onPressListItem.bind(this, item)}
+                            onPress={this.onPressListItem.bind(this, item)}
                         />
                     }
                 />

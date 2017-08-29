@@ -62,7 +62,7 @@ class Contacts extends Screen {
                     renderItem={({item}) => 
                         <TextListItem
                             title={item.name}
-                            onPressTextListItem={this.onPressTextListItem.bind(this, item)}
+                            onPress={this.onPressTextListItem.bind(this, item)}
                         />
                     }
                 />

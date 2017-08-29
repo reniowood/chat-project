@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 
 export default class TwoLineListItem extends React.Component {
     render() {
-        const { title, subtitle }  = this.props;
+        const { title, subtitle, onPress }  = this.props;
 
         return (
             <View>
-                <TouchableHighlight onPress={this.props.onPressListItem}>
+                <TouchableHighlight onPress={onPress}>
                     <View style={styles.item}>
                         <Text style={styles.title}>{title}</Text>
                         <Text style={styles.subtitle}>{subtitle}</Text>
