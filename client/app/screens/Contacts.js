@@ -24,17 +24,22 @@ class Contacts extends Screen {
         navigator.push({
             screen: 'com.client.ChatRoom',
             title: name,
+            passProps: {
+                chatId,
+            }
         });
     }
 
     onPressUserListItem(item) {
-        const { token, addChat } = this.props;
+        const { user, addChat } = this.props;
 
-        ChatService.createChat(token, [item.id]).then(({chatId, name}) => {
-            addChat(chatId, name, [user.id, item.id], []);
+        ChatService.createChat(user.authToken, [item.id]).then(({id, name, user_ids, alreadyExists}) => {
+            if (!alreadyExists) {
+                addChat(id, name, user_ids, []);
+            }
 
             this.closeContacts();
-            this.openChatRoom(chatId, name);
+            this.openChatRoom(id, name);
         });
     }
 

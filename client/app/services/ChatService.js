@@ -27,15 +27,20 @@ export default class ChatService {
                 }
             }).then((response) => {
                 if (response.status >= 200 && response.status < 300) {
-                    return response.json();
+                    response.json().then((body) => {
+                        body.alreadyExists = false;
+
+                        resolve(body)
+                    });
+                } else if (response.status === 409) {
+                    response.json().then((body) => {
+                        body.alreadyExists = true;
+
+                        resolve(body);
+                    });
                 } else {
                     reject(new Error("새로운 채팅방을 만들지 못했습니다."));
                 }
-            }).then((body) => {
-                resolve({
-                    chatId: body.chat_id,
-                    name: body.name,
-                });
             });
         });
     }

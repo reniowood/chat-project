@@ -13,11 +13,8 @@ class User < ApplicationRecord
     has_many :users, through: :contacts
 
     def as_json(options={})
-        if options.present?
-            super(only: [:id, :name, :email])
-        else
-            super(options)
-        end
+        options[:only] ||= [:id, :name, :email]
+        super(options)
     end
 
     def has_invalid_email?
