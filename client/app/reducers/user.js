@@ -1,7 +1,7 @@
 import {
+    INIT_USER,
     REGISTER_USER,
     LOGIN_USER,
-    LOGOUT_USER,
 } from '../actions/user';
 import { initialState } from '../stores/state';
 
@@ -9,6 +9,8 @@ const defaultState = initialState.user;
 
 export default function user(state = defaultState, action) {
     switch (action.type) {
+        case INIT_USER:
+            return defaultState;
         case REGISTER_USER:
             return Object.assign({}, state, {
                 id: action.id,
@@ -24,13 +26,6 @@ export default function user(state = defaultState, action) {
                 authToken: action.authToken,
                 lastLoggedIn: new Date(),
                 isLoggedIn: true,
-            });
-        case LOGOUT_USER:
-            return Object.assign({}, state, {
-                id: null,
-                email: null,
-                authToken: null,
-                isLoggedIn: false,
             });
         default:
             return state;

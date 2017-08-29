@@ -1,4 +1,5 @@
 import {
+    INIT_CHATS,
     ADD_CHAT,
     ADD_MESSAGE,
 } from '../actions/chats';
@@ -32,6 +33,8 @@ function createMessageIds(messages) {
 
 export default function chats(state = defaultState, action) {
     switch (action.type) {
+        case INIT_CHATS:
+            return defaultState;
         case ADD_CHAT:
             const messages = convertMessages(action.messages);
             const messageIds = createMessageIds(action.messages);
