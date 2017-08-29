@@ -8,6 +8,11 @@ import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
 class Splash extends Screen {
+    static navigatorStyle = {
+        ...Screen.navigatorStyle,
+        navBarHidden: true,
+    };
+    
     constructor(props) {
         super(props);
 

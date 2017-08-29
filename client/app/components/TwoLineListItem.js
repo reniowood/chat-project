@@ -20,14 +20,17 @@ export default class TwoLineListItem extends React.Component {
 
 const styles = StyleSheet.create({
     item: {
-        height: 80,
-        borderBottomWidth: 1,
-        paddingLeft: 15,
-        paddingTop: 15,
+        height: 72,
+        paddingTop: 20,
+        paddingLeft: 16,
+        paddingRight: 16,
+        paddingBottom: 20,
+        justifyContent: 'center',
     },
     title: {
-        fontWeight: 'bold',
+        fontSize: 16,
     },
     subtitle: {
+        fontSize: 14,
     },
 });

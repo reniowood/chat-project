@@ -21,11 +21,11 @@ const styles = StyleSheet.create({
     item: {
         flex: 1,
         justifyContent: 'center',
-        height: 60,
-        borderBottomWidth: 1,
-        paddingLeft: 15,
+        height: 48,
+        paddingLeft: 16,
+        paddingRight: 16,
     },
     title: {
-        fontSize: 18,
+        fontSize: 16,
     },
 });

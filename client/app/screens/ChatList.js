@@ -77,17 +77,19 @@ class ChatList extends Screen {
 
         return (
             <View style={styles.container}>
-                <FlatList
-                    data={chats}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => 
-                        <TwoLineListItem
-                            title={item.name}
-                            subtitle={item.lastMessage}
-                            onPress={this.onPressListItem.bind(this, item)}
-                        />
-                    }
-                />
+                <View style={styles.list}>
+                    <FlatList
+                        data={chats}
+                        keyExtractor={item => item.id}
+                        renderItem={({item}) => 
+                            <TwoLineListItem
+                                title={item.name}
+                                subtitle={item.lastMessage}
+                                onPress={this.onPressListItem.bind(this, item)}
+                            />
+                        }
+                    />
+                </View>
                 <ActionButton
                     buttonColor={Color.candyApple}
                     position="right"
@@ -101,6 +103,10 @@ class ChatList extends Screen {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+    },
+    list: {
+        paddingTop: 8,
+        paddingBottom: 8,
     },
 });
 

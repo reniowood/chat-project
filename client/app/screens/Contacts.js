@@ -56,16 +56,18 @@ class Contacts extends Screen {
 
         return (
             <View style={styles.container}>
-                <FlatList
-                    data={contacts}
-                    keyExtractor={item => item.id}
-                    renderItem={({item}) => 
-                        <TextListItem
-                            title={item.name}
-                            onPress={this.onPressTextListItem.bind(this, item)}
-                        />
-                    }
-                />
+                <View style={styles.list}>
+                    <FlatList
+                        data={contacts}
+                        keyExtractor={item => item.id}
+                        renderItem={({item}) => 
+                            <TextListItem
+                                title={item.name}
+                                onPress={this.onPressTextListItem.bind(this, item)}
+                            />
+                        }
+                    />
+                </View>
                 <ActionButton
                     buttonColor={Color.candyApple}
                     position="right"
@@ -80,6 +82,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    list: {
+        paddingTop: 8,
+    }
 });
 
 const mapStateToProps = (state, ownProps) => {
