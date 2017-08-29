@@ -57,8 +57,10 @@ const styles = StyleSheet.create({
 
 const setLastMessages = (chats, messages) => {
     chats.forEach((chat) => {
-        const lastMessageId = chat.messages[chat.messages.length - 1];
-        chat.lastMessage = messages[lastMessageId].message;
+        if (chat.messages.length > 0) {
+            const lastMessageId = chat.messages[chat.messages.length - 1];
+            chat.lastMessage = messages[lastMessageId].message;
+        }
     });
 };
 
