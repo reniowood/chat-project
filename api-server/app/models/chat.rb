@@ -5,6 +5,11 @@ class Chat < ApplicationRecord
     has_many :user_chats
     has_many :users, through: :user_chats
 
+    def as_json(options={})
+        options[:only] ||= [:id, :name]
+        super(options)
+    end
+
     def send_message(sender_id, message)
         send_message_to_mq(sender_id, {
             id: self.id,
