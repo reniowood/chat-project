@@ -11,7 +11,7 @@ import ChatService from '../services/ChatService';
 
 class Login extends Screen {
     static navigatorStyle = {
-        ...Login.navigatorStyle,
+        ...Screen.navigatorStyle,
         navBarHidden: true,
     };
 

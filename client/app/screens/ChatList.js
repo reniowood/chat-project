@@ -3,11 +3,50 @@ import { View, FlatList, Text, Button, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import ActionButton from 'react-native-action-button';
 import Screen from './Screen';
+import Icons from '../assets/icons';
 import Color from '../styles/Color';
 import ChatService from '../services/ChatService';
 import ChatListItem from '../components/ChatListItem';
 
 class ChatList extends Screen {
+    static navigatorButtons = {
+        rightButtons: [
+            {
+                icon: Icons.settings,
+                id: 'settings',
+            },
+        ],
+    };
+
+    constructor(props) {
+        super(props);
+
+        this.props.navigator.setOnNavigatorEvent(this.onNavigatorEvent.bind(this));
+    }
+
+    onNavigatorEvent(event) {
+        const { navigator } = this.props;
+
+        switch (event.type) {
+            case 'NavBarButtonPress':
+                switch (event.id) {
+                    case 'settings':
+                        navigator.push({
+                            screen: 'com.client.Settings',
+                            title: '설정',
+                        });
+
+                        break;
+                    default:
+                        break;
+                }
+
+                break;
+            default:
+                break;
+        }
+    }
+
     onPressChatListItem(item) {
         const { navigator } = this.props;
 

@@ -7,6 +7,7 @@ import ChatList from './ChatList';
 import Contacts from './Contacts';
 import AddContact from './AddContact';
 import ChatRoom from './ChatRoom';
+import Settings from './Settings';
 
 export function registerScreens(store, Provider) {
     Navigation.registerComponent('com.client.Splash', () => Splash, store, Provider);
@@ -16,4 +17,5 @@ export function registerScreens(store, Provider) {
     Navigation.registerComponent('com.client.Contacts', () => Contacts, store, Provider);
     Navigation.registerComponent('com.client.AddContact', () => AddContact, store, Provider);
     Navigation.registerComponent('com.client.ChatRoom', () => ChatRoom, store, Provider);
+    Navigation.registerComponent('com.client.Settings', () => Settings, store, Provider);
 }
