@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
+import { View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
 
 export default class TextListItem extends React.Component {
     render() {
@@ -7,11 +7,11 @@ export default class TextListItem extends React.Component {
 
         return (
             <View>
-                <TouchableHighlight onPress={onPress}>
+                <TouchableNativeFeedback onPress={onPress}>
                     <View style={styles.item}>
                         <Text style={styles.title}>{title}</Text>
                     </View>
-                </TouchableHighlight>
+                </TouchableNativeFeedback>
             </View>
         );
     }
