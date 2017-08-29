@@ -6,7 +6,7 @@ import Screen from './Screen';
 import Icons from '../assets/icons';
 import Color from '../styles/Color';
 import ChatService from '../services/ChatService';
-import ChatListItem from '../components/ChatListItem';
+import TwoLineListItem from '../components/TwoLineListItem';
 
 class ChatList extends Screen {
     static navigatorButtons = {
@@ -47,7 +47,7 @@ class ChatList extends Screen {
         }
     }
 
-    onPressChatListItem(item) {
+    onPressListItem(item) {
         const { navigator } = this.props;
 
         navigator.push({
@@ -76,7 +76,13 @@ class ChatList extends Screen {
                 <FlatList
                     data={chats}
                     keyExtractor={item => item.id}
-                    renderItem={({item}) => <ChatListItem item={item} onPressChatListItem={this.onPressChatListItem.bind(this, item)} />}
+                    renderItem={({item}) => 
+                        <TwoLineListItem
+                            title={item.name}
+                            subtitle={item.lastMessage}
+                            onPressListItem={this.onPressListItem.bind(this, item)}
+                        />
+                    }
                 />
                 <ActionButton
                     buttonColor={Color.candyApple}

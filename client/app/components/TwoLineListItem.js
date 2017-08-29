@@ -1,16 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 
-export default class ChatListItem extends React.Component {
+export default class TwoLineListItem extends React.Component {
     render() {
-        const item = this.props.item;
+        const { title, subtitle }  = this.props;
 
         return (
             <View>
-                <TouchableHighlight onPress={this.props.onPressChatListItem}>
+                <TouchableHighlight onPress={this.props.onPressListItem}>
                     <View style={styles.item}>
-                        <Text style={styles.subject}>{item.name}</Text>
-                        <Text>{item.lastMessage}</Text>
+                        <Text style={styles.title}>{title}</Text>
+                        <Text style={styles.subtitle}>{subtitle}</Text>
                     </View>
                 </TouchableHighlight>
             </View>
@@ -25,7 +25,9 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         paddingTop: 15,
     },
-    subject: {
+    title: {
         fontWeight: 'bold',
+    },
+    subtitle: {
     },
 });
