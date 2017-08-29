@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableHighlight } from 'react-native';
 
-export default class UserListItem extends React.Component {
+export default class TextListItem extends React.Component {
     render() {
-        const item = this.props.item;
+        const { title } = this.props;
 
         return (
             <View>
-                <TouchableHighlight onPress={this.props.onPressUserListItem}>
+                <TouchableHighlight onPress={this.props.onPressTextListItem}>
                     <View style={styles.item}>
-                        <Text style={styles.subject}>{item.name}</Text>
+                        <Text style={styles.title}>{title}</Text>
                     </View>
                 </TouchableHighlight>
             </View>
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         paddingLeft: 15,
     },
-    subject: {
+    title: {
         fontSize: 18,
     },
 });

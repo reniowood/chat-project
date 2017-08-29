@@ -5,7 +5,7 @@ import ActionButton from 'react-native-action-button';
 import { addChat } from '../actions/chats';
 import Screen from './Screen';
 import Color from '../styles/Color';
-import UserListItem from '../components/UserListItem';
+import TextListItem from '../components/TextListItem';
 import UserService from '../services/UserService';
 import ChatService from '../services/ChatService';
 
@@ -30,7 +30,7 @@ class Contacts extends Screen {
         });
     }
 
-    onPressUserListItem(item) {
+    onPressTextListItem(item) {
         const { user, addChat } = this.props;
 
         ChatService.createChat(user.authToken, [item.id]).then(({id, name, user_ids, alreadyExists}) => {
@@ -59,7 +59,12 @@ class Contacts extends Screen {
                 <FlatList
                     data={contacts}
                     keyExtractor={item => item.id}
-                    renderItem={({item}) => <UserListItem item={item} onPressUserListItem={this.onPressUserListItem.bind(this, item)} />}
+                    renderItem={({item}) => 
+                        <TextListItem
+                            title={item.name}
+                            onPressTextListItem={this.onPressTextListItem.bind(this, item)}
+                        />
+                    }
                 />
                 <ActionButton
                     buttonColor={Color.candyApple}
