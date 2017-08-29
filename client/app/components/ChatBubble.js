@@ -6,9 +6,10 @@ export default class ChatBubble extends React.Component {
     convertDateFormat(date) {
         const hours = date.getHours();
         const minutes = date.getMinutes();
+        const twoDigitsMinutes = minutes < 10 ? '0' + minutes : minutes;
         const ampm = hours >= 12 ? '오전' : '오후';
 
-        return `${ampm} ${hours % 12}:${minutes}`;
+        return `${ampm} ${hours % 12}:${twoDigitsMinutes}`;
     }
 
     render() {
