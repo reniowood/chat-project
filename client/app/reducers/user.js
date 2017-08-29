@@ -27,7 +27,8 @@ export default function user(state = defaultState, action) {
             });
         case LOGOUT_USER:
             return Object.assign({}, state, {
-                email: action.email,
+                id: null,
+                email: null,
                 authToken: null,
                 isLoggedIn: false,
             });

@@ -11,5 +11,5 @@ export function loginUser(id, email, authToken) {
 }
 
 export function logoutUser() {
-    return { type: LOGOUT_USER, email };
+    return { type: LOGOUT_USER };
 }
