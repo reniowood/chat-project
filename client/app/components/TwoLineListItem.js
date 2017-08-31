@@ -1,16 +1,22 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import Icons from '../assets/icons';
 
 export default class TwoLineListItem extends React.Component {
     render() {
         const { title, subtitle, onPress }  = this.props;
 
         return (
-            <View>
+            <View style={styles.container}>
                 <TouchableNativeFeedback onPress={onPress}>
                     <View style={styles.item}>
-                        <Text style={styles.title}>{title}</Text>
-                        <Text style={styles.subtitle}>{subtitle}</Text>
+                        <View style={styles.icon}>
+                            <Image source={Icons.avatar} style={{ width: 36, height: 36, }}/>
+                        </View>
+                        <View style={styles.text}>
+                            <Text style={styles.title}>{title}</Text>
+                            <Text style={styles.subtitle}>{subtitle}</Text>
+                        </View>
                     </View>
                 </TouchableNativeFeedback>
             </View>
@@ -19,16 +25,24 @@ export default class TwoLineListItem extends React.Component {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
     item: {
+        flexDirection: 'row',
         height: 72,
-        paddingTop: 20,
+    },
+    icon: {
         paddingLeft: 16,
-        paddingRight: 16,
-        paddingBottom: 20,
+        justifyContent: 'center',
+    },
+    text: {
+        paddingLeft: 20,
         justifyContent: 'center',
     },
     title: {
         fontSize: 16,
+        color: 'black',
     },
     subtitle: {
         fontSize: 14,

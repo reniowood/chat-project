@@ -8,8 +8,5 @@ registerScreens(store, Provider);
 Navigation.startSingleScreenApp({
     screen: {
         screen: 'com.client.Splash',
-        navigationStyle: {},
-        navigationButton: {},
     },
-    passProp: {},
 });
