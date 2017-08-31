@@ -6,7 +6,7 @@ import Screen from './Screen';
 import Icons from '../assets/icons';
 import Color from '../styles/Color';
 import ChatService from '../services/ChatService';
-import TwoLineListItem from '../components/TwoLineListItem';
+import AvatarTwoLineListItem from '../components/AvatarTwoLineListItem';
 
 class ChatList extends Screen {
     static navigatorButtons = {
@@ -82,7 +82,7 @@ class ChatList extends Screen {
                         data={chats}
                         keyExtractor={item => item.id}
                         renderItem={({item}) => 
-                            <TwoLineListItem
+                            <AvatarTwoLineListItem
                                 title={item.name}
                                 subtitle={item.lastMessage}
                                 onPress={this.onPressListItem.bind(this, item)}

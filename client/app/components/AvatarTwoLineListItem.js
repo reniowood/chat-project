@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import Icons from '../assets/icons';
 
-export default class TwoLineListItem extends React.Component {
+export default class AvatarTwoLineListItem extends React.Component {
     render() {
         const { title, subtitle, onPress }  = this.props;
 
@@ -10,6 +10,9 @@ export default class TwoLineListItem extends React.Component {
             <View style={styles.container}>
                 <TouchableNativeFeedback onPress={onPress}>
                     <View style={styles.item}>
+                        <View style={styles.icon}>
+                            <Image source={Icons.avatar} style={styles.image} />
+                        </View>
                         <View style={styles.text}>
                             <Text style={styles.title}>{title}</Text>
                             <Text style={styles.subtitle}>{subtitle}</Text>
@@ -29,8 +32,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         height: 72,
     },
-    text: {
+    icon: {
         paddingLeft: 16,
+        justifyContent: 'center',
+    },
+    image: {
+        width: 36,
+        height: 36,
+    },
+    text: {
+        paddingLeft: 20,
         justifyContent: 'center',
     },
     title: {
